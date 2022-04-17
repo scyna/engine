@@ -1,4 +1,4 @@
-module scyna_engine
+module github.com/scyna/engine
 
 go 1.17
 
