@@ -4,14 +4,14 @@ import (
 	"flag"
 	"log"
 	"net/http"
-	"scyna_engine/gateway"
-	"scyna_engine/manager/authentication"
-	"scyna_engine/manager/generator"
-	"scyna_engine/manager/logging"
-	"scyna_engine/manager/session"
-	"scyna_engine/manager/setting"
-	"scyna_engine/proxy"
 
+	"github.com/scyna/engine/gateway"
+	"github.com/scyna/engine/manager/authentication"
+	"github.com/scyna/engine/manager/generator"
+	"github.com/scyna/engine/manager/logging"
+	"github.com/scyna/engine/manager/session"
+	"github.com/scyna/engine/manager/setting"
+	"github.com/scyna/engine/proxy"
 	scyna "github.com/scyna/go"
 )
 

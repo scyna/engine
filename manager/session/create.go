@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"scyna_engine/manager/manager"
 
+	"github.com/scyna/engine/manager/manager"
 	scyna "github.com/scyna/go"
 
 	"google.golang.org/protobuf/proto"
