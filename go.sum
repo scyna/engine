@@ -73,8 +73,8 @@ github.com/scylladb/go-reflectx v1.0.1 h1:b917wZM7189pZdlND9PbIJ6NQxfDPfBvUaQ7cj
 github.com/scylladb/go-reflectx v1.0.1/go.mod h1:rWnOfDIRWBGN0miMLIcoPt/Dhi2doCMZqwMCJ3KupFc=
 github.com/scylladb/gocqlx/v2 v2.7.0 h1:/w1VeJHCEAsg9eTculTvIS9eIe/VmEu0clhlH1CF7lc=
 github.com/scylladb/gocqlx/v2 v2.7.0/go.mod h1:jKhM0/LkEAhEOSwd10TCMQdlC5x8aEzK7cXjQcPyMJ0=
-github.com/scyna/go v0.1.1 h1:FhVHJXx9i9mR43oBzgrQe3PYNW/6kEt9XmQJrvl2iNc=
-github.com/scyna/go v0.1.1/go.mod h1:xhdRRJvWgK6hg8vI4+r7YHeIeur9DZtxK5AgmsFOjhg=
+github.com/scyna/go v0.1.2 h1:GZkdXOi9qik1Szcw17+ptyCfzb8LlAvMCJxylZvtPzo=
+github.com/scyna/go v0.1.2/go.mod h1:xhdRRJvWgK6hg8vI4+r7YHeIeur9DZtxK5AgmsFOjhg=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
