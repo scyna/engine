@@ -13,7 +13,7 @@ import (
 var serialNumber *scyna.SerialNumber
 
 func Init() {
-	serialNumber = scyna.ID.InitSN("scyna.gen_sn")
+	serialNumber = scyna.InitSN("scyna.gen_sn")
 }
 
 func Create(s *scyna.Service) {
