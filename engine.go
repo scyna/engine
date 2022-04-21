@@ -60,6 +60,10 @@ func main() {
 	scyna.RegisterService(scyna.AUTH_GET_URL, authentication.Get)
 	scyna.RegisterService(scyna.AUTH_LOGOUT_URL, authentication.Logout)
 
+	/*session*/
+	scyna.RegisterSignal(scyna.SESSION_END_CHANNEL, session.End)
+	scyna.RegisterSignal(scyna.SESSION_UPDATE_CHANNEL, session.Update)
+
 	go func() {
 		gateway_ := gateway.NewGateway()
 		log.Println("scyna Gateway Started")
