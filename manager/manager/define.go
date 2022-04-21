@@ -3,7 +3,7 @@ package manager
 import scyna "github.com/scyna/go"
 
 const (
-	MODULE_CODE   = "scynaManager"
+	MODULE_CODE   = "scyna.engine"
 	MODULE_SECRET = "123456"
 )
 
