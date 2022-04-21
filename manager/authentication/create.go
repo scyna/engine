@@ -10,11 +10,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 )
 
-var serialNumber *scyna.SerialNumber
-
-func Init() {
-	serialNumber = scyna.InitSN("scyna.gen_sn")
-}
+var serialNumber = scyna.InitSN("scyna.gen_sn")
 
 func Create(s *scyna.Service) {
 	log.Println("Receive CreateAuthRequest")

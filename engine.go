@@ -41,7 +41,6 @@ func main() {
 	defer scyna.Release()
 	generator.Init()
 	session.Init(MODULE_CODE, *secret)
-	authentication.Init()
 	scyna.UseDirectLog(5)
 
 	/* generator */
