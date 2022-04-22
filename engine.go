@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"github.com/scyna/engine/manager/call"
 	"log"
 	"net/http"
 
@@ -49,6 +50,9 @@ func main() {
 
 	/*logging*/
 	scyna.RegisterSignal(scyna.LOG_WRITE_CHANNEL, logging.Write)
+
+	/*call*/
+	scyna.RegisterSignal(scyna.CALL_WRITE_CHANNEL, call.Write)
 
 	/*setting*/
 	scyna.RegisterService(scyna.SETTING_READ_URL, setting.Read)
