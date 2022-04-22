@@ -21,4 +21,8 @@ func Remove(s *scyna.Service) {
 	}
 
 	s.Done(scyna.OK)
+
+	scyna.EmitSignal(scyna.SETTING_REMOVE_CHANNEL+request.Module, &scyna.SettingUpdatedSignal{
+		Key:   request.Key,
+	})
 }
