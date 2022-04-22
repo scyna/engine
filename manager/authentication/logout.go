@@ -22,14 +22,14 @@ func Logout(s *scyna.Service) {
 		return
 	}
 
-	if err := updateSesion(request.Token, request.UserID); err != scyna.OK {
+	if err := updateSession(request.Token, request.UserID); err != scyna.OK {
 		s.Error(err)
 		return
 	}
 	s.Done(scyna.OK)
 }
 
-func updateSesion(token string, userID string) *scyna.Error {
+func updateSession(token string, userID string) *scyna.Error {
 	var userID_ string
 	err := qb.Select("scyna.authentication").
 		Columns("uid").
