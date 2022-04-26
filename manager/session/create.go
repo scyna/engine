@@ -7,8 +7,7 @@ import (
 	"net/http"
 
 	"github.com/scyna/engine/manager/manager"
-	scyna "github.com/scyna/go/scyna"
-
+	"github.com/scyna/go/scyna"
 	"google.golang.org/protobuf/proto"
 )
 

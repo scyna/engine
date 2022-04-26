@@ -3,9 +3,8 @@ package setting
 import (
 	"log"
 
-	scyna "github.com/scyna/go/scyna"
-
 	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/scyna/go/scyna"
 )
 
 func Read(s *scyna.Context, request *scyna.ReadSettingRequest) {

@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"log"
 
-	scyna "github.com/scyna/go/scyna"
-
 	"github.com/nats-io/nats.go"
 	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/scyna/go/scyna"
 )
 
 type Application struct {

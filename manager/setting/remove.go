@@ -1,9 +1,8 @@
 package setting
 
 import (
-	scyna "github.com/scyna/go/scyna"
-
 	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/scyna/go/scyna"
 )
 
 func Remove(s *scyna.Context, request *scyna.RemoveSettingRequest) {

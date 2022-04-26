@@ -2,12 +2,10 @@ package authentication
 
 import (
 	"log"
-
-	scyna "github.com/scyna/go/scyna"
-
 	"time"
 
 	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/scyna/go/scyna"
 )
 
 func Get(s *scyna.Context, request *scyna.GetAuthRequest) {

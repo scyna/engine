@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/scylladb/gocqlx/v2/qb"
-	scyna "github.com/scyna/go/scyna"
+	"github.com/scyna/go/scyna"
 )
 
 func Update(signal *scyna.UpdateSessionSignal) {

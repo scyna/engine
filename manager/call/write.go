@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/gocql/gocql"
-	scyna "github.com/scyna/go/scyna"
+	"github.com/scyna/go/scyna"
 )
 
 func Write(signal *scyna.WriteCallSignal) {

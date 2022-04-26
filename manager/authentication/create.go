@@ -4,10 +4,9 @@ import (
 	"log"
 	"time"
 
-	scyna "github.com/scyna/go/scyna"
-
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/scyna/go/scyna"
 )
 
 var serialNumber = scyna.InitSN("scyna.gen_sn")

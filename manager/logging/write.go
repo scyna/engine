@@ -3,7 +3,7 @@ package logging
 import (
 	"log"
 
-	scyna "github.com/scyna/go/scyna"
+	"github.com/scyna/go/scyna"
 )
 
 func Write(signal *scyna.WriteLogSignal) {
