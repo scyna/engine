@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	scyna "github.com/scyna/go"
+	scyna "github.com/scyna/go/scyna"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -12,12 +12,8 @@ import (
 
 var serialNumber = scyna.InitSN("scyna.gen_sn")
 
-func Create(s *scyna.Service) {
+func Create(s *scyna.Context, request *scyna.CreateAuthRequest) {
 	log.Println("Receive CreateAuthRequest")
-	var request scyna.CreateAuthRequest
-	if !s.Parse(&request) {
-		return
-	}
 
 	if !checkOrg(request.Organization, request.Secret) {
 		s.LOG.Warning("Organization not exist")

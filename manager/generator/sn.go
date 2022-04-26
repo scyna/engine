@@ -4,19 +4,15 @@ import (
 	"log"
 	"time"
 
-	scyna "github.com/scyna/go"
+	scyna "github.com/scyna/go/scyna"
 
 	"github.com/scylladb/gocqlx/v2/qb"
 )
 
 const snPartitionSize = 500
 
-func GetSN(s *scyna.Service) {
+func GetSN(s *scyna.Context, request *scyna.GetSNRequest) {
 	log.Print("Receive GetSNRequest")
-	var request scyna.GetSNRequest
-	if !s.Parse(&request) {
-		return
-	}
 
 	for i := 0; i < tryCount; i++ {
 		if bucket := nextBucket(request.Key); bucket != nil {

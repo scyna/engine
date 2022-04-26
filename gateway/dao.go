@@ -3,7 +3,7 @@ package gateway
 import (
 	"log"
 
-	scyna "github.com/scyna/go"
+	"github.com/scyna/go/scyna"
 
 	"time"
 
@@ -11,17 +11,17 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 )
 
-func (gateway *Gateway) saveCall(app string, id uint64, day int, start time.Time, duration int64, url string, caller string, service *scyna.Service) {
-	qBatch := scyna.DB.NewBatch(gocql.LoggedBatch)
-	qBatch.Query("INSERT INTO scyna.call(id, day, time, duration, source,request, response, status, session_id, caller_id)"+
-		" VALUES (?,?,?,?,?,?,?,?,?,?)", id, day, start, duration, url, service.Request.Body, service.Response.Body,
-		service.Response.Code, service.Response.SessionID, caller,
-	)
-	qBatch.Query("INSERT INTO scyna.app_has_call(app_code, call_id, day) VALUES (?,?,?)", app, id, day)
-	if err := scyna.DB.ExecuteBatch(qBatch); err != nil {
-		log.Print(err)
-		scyna.LOG.Error("Error in save call")
-	}
+func (gateway *Gateway) saveCall(app string, id uint64, day int, start time.Time, duration int64, url string, caller string, context *scyna.HttpContext) {
+	// qBatch := scyna.DB.NewBatch(gocql.LoggedBatch)
+	// qBatch.Query("INSERT INTO scyna.call(id, day, time, duration, source,request, response, status, session_id, caller_id)"+
+	// 	" VALUES (?,?,?,?,?,?,?,?,?,?)", id, day, start, duration, url, service.Request.Body, service.Response.Body,
+	// 	service.Response.Code, service.Response.SessionID, caller,
+	// )
+	// qBatch.Query("INSERT INTO scyna.app_has_call(app_code, call_id, day) VALUES (?,?,?)", app, id, day)
+	// if err := scyna.DB.ExecuteBatch(qBatch); err != nil {
+	// 	log.Print(err)
+	// 	scyna.LOG.Error("Error in save call")
+	// }
 }
 
 func (gateway *Gateway) saveErrorCall(app string, status int, id uint64, day int, start time.Time, url string, caller string) {

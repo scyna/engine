@@ -2,9 +2,10 @@ package main
 
 import (
 	"flag"
-	"github.com/scyna/engine/manager/call"
 	"log"
 	"net/http"
+
+	"github.com/scyna/engine/manager/call"
 
 	"github.com/scyna/engine/gateway"
 	"github.com/scyna/engine/manager/authentication"
@@ -12,8 +13,7 @@ import (
 	"github.com/scyna/engine/manager/logging"
 	"github.com/scyna/engine/manager/session"
 	"github.com/scyna/engine/manager/setting"
-	"github.com/scyna/engine/proxy"
-	scyna "github.com/scyna/go"
+	scyna "github.com/scyna/go/scyna"
 )
 
 const MODULE_CODE = "scyna.engine"
@@ -45,8 +45,8 @@ func main() {
 	scyna.UseDirectLog(5)
 
 	/* generator */
-	scyna.RegisterService(scyna.GEN_GET_ID_URL, generator.GetID)
-	scyna.RegisterService(scyna.GEN_GET_SN_URL, generator.GetSN)
+	scyna.RegisterStatelessService(scyna.GEN_GET_ID_URL, generator.GetID)
+	scyna.RegisterStatefullService[*scyna.GetSNRequest](scyna.GEN_GET_SN_URL, generator.GetSN)
 
 	/*logging*/
 	scyna.RegisterSignal(scyna.LOG_WRITE_CHANNEL, logging.Write)
@@ -55,14 +55,14 @@ func main() {
 	scyna.RegisterSignal(scyna.CALL_WRITE_CHANNEL, call.Write)
 
 	/*setting*/
-	scyna.RegisterService(scyna.SETTING_READ_URL, setting.Read)
-	scyna.RegisterService(scyna.SETTING_WRITE_URL, setting.Write)
-	scyna.RegisterService(scyna.SETTING_REMOVE_URL, setting.Remove)
+	scyna.RegisterStatefullService(scyna.SETTING_READ_URL, setting.Read)
+	scyna.RegisterStatefullService(scyna.SETTING_WRITE_URL, setting.Write)
+	scyna.RegisterStatefullService(scyna.SETTING_REMOVE_URL, setting.Remove)
 
 	/*authentication*/
-	scyna.RegisterService(scyna.AUTH_CREATE_URL, authentication.Create)
-	scyna.RegisterService(scyna.AUTH_GET_URL, authentication.Get)
-	scyna.RegisterService(scyna.AUTH_LOGOUT_URL, authentication.Logout)
+	scyna.RegisterStatefullService(scyna.AUTH_CREATE_URL, authentication.Create)
+	scyna.RegisterStatefullService(scyna.AUTH_GET_URL, authentication.Get)
+	scyna.RegisterStatefullService(scyna.AUTH_LOGOUT_URL, authentication.Logout)
 
 	go func() {
 		gateway_ := gateway.NewGateway()
@@ -72,13 +72,13 @@ func main() {
 		}
 	}()
 
-	go func() {
-		proxy_ := proxy.NewProxy()
-		log.Println("scyna Proxy Started")
-		if err := http.ListenAndServe(":8080", proxy_); err != nil {
-			log.Println("Proxy:" + err.Error())
-		}
-	}()
+	// go func() {
+	// 	proxy_ := proxy.NewProxy()
+	// 	log.Println("scyna Proxy Started")
+	// 	if err := http.ListenAndServe(":8080", proxy_); err != nil {
+	// 		log.Println("Proxy:" + err.Error())
+	// 	}
+	// }()
 
 	/*session*/
 	scyna.RegisterSignal(scyna.SESSION_END_CHANNEL, session.End)

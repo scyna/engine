@@ -3,17 +3,13 @@ package setting
 import (
 	"log"
 
-	scyna "github.com/scyna/go"
+	scyna "github.com/scyna/go/scyna"
 
 	"github.com/scylladb/gocqlx/v2/qb"
 )
 
-func Read(s *scyna.Service) {
+func Read(s *scyna.Context, request *scyna.ReadSettingRequest) {
 	log.Println("Receive ReadSettingRequest")
-	var request scyna.ReadSettingRequest
-	if !s.Parse(&request) {
-		return
-	}
 
 	var value string
 	if err := qb.Select("scyna.setting").

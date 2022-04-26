@@ -3,19 +3,15 @@ package authentication
 import (
 	"log"
 
-	scyna "github.com/scyna/go"
+	scyna "github.com/scyna/go/scyna"
 
 	"time"
 
 	"github.com/scylladb/gocqlx/v2/qb"
 )
 
-func Get(s *scyna.Service) {
+func Get(s *scyna.Context, request *scyna.GetAuthRequest) {
 	log.Println("Receive GetAuthRequest")
-	var request scyna.GetAuthRequest
-	if !s.Parse(&request) {
-		return
-	}
 	if expired, userID := getAuthentication(request.Token, request.App); expired != nil {
 		s.Done(&scyna.GetAuthResponse{
 			Token:   request.Token,

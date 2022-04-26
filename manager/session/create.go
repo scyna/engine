@@ -7,13 +7,13 @@ import (
 	"net/http"
 
 	"github.com/scyna/engine/manager/manager"
-	scyna "github.com/scyna/go"
+	scyna "github.com/scyna/go/scyna"
 
 	"google.golang.org/protobuf/proto"
 )
 
 func Create(w http.ResponseWriter, r *http.Request) {
-	log.Println("Receive AuthenticateRequest")
+	log.Println("Receive CreateSessionRequest")
 	buf, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Bad Request", http.StatusBadRequest)

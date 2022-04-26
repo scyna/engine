@@ -3,7 +3,7 @@ package gateway
 import (
 	sync "sync"
 
-	scyna "github.com/scyna/go"
+	scyna "github.com/scyna/go/scyna"
 
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"

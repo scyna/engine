@@ -6,14 +6,14 @@ import (
 	"net/http"
 	"time"
 
-	scyna "github.com/scyna/go"
-
+	"github.com/scyna/go/scyna"
 	"google.golang.org/protobuf/proto"
 )
 
 type Gateway struct {
 	Queries      QueryPool
 	Applications map[string]Application
+	Contexts     scyna.ContextPool
 }
 
 func NewGateway() *Gateway {
@@ -27,6 +27,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	callID := scyna.ID.Next()
 	start := time.Now()
 	day := scyna.GetDayByTime(start)
+
 	auth := false
 	ok, appID, json, url := parseUrl(req.URL.String())
 
@@ -41,8 +42,8 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	query := gateway.Queries.GetQuery()
 	defer gateway.Queries.Put(query)
 
-	service := scyna.Services.GetService()
-	defer scyna.Services.Put(service)
+	ctx := gateway.Contexts.GetContext()
+	defer gateway.Contexts.PutContext(ctx)
 
 	/*headers*/
 	rw.Header().Set("Access-Control-Allow-Origin", req.Header.Get("Origin"))
@@ -55,8 +56,8 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("Content-Type", "application/octet-stream")
 	}
 
-	service.Request.JSON = json
-	service.Request.CallID = callID
+	ctx.Request.JSON = json
+	ctx.Request.CallID = callID
 
 	if a, ok := gateway.Applications[appID]; !ok {
 		http.Error(rw, "Forbidden", http.StatusForbidden)
@@ -72,7 +73,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	} else {
 		if cookie, err := req.Cookie("session"); err == nil {
 			token := cookie.Value
-			service.Request.Data = token
+			ctx.Request.Data = token
 			if exp := checkService(token, appID, url); exp == nil {
 				http.Error(rw, "Unauthorized", http.StatusUnauthorized)
 				return
@@ -101,7 +102,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	/*build request*/
-	err := service.Request.Build(req)
+	err := ctx.Request.Build(req)
 	if err != nil {
 		http.Error(rw, "Cannot process request", http.StatusInternalServerError)
 		gateway.saveErrorCall(appID, 500, callID, day, start, url, "app")
@@ -109,7 +110,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	/*serialize the request */
-	reqBytes, err := proto.Marshal(&service.Request)
+	reqBytes, err := proto.Marshal(&ctx.Request)
 	if err != nil {
 		http.Error(rw, "Cannot process request", http.StatusInternalServerError)
 		gateway.saveErrorCall(appID, 500, callID, day, start, url, "app")
@@ -126,8 +127,8 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	/*response*/
-	err = service.Response.ReadFrom(msg.Data)
-	if err != nil {
+
+	if err := proto.Unmarshal(msg.Data, &ctx.Response); err != nil {
 		log.Println("nats-proxy:" + err.Error())
 		http.Error(rw, "Cannot deserialize response", http.StatusInternalServerError)
 		gateway.saveErrorCall(appID, 500, callID, day, start, url, "app")
@@ -135,18 +136,18 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	if auth {
-		if service.Response.Code == 200 {
+		if ctx.Response.Code == 200 {
 			cookie := &http.Cookie{
 				Name:     "session",
-				Value:    service.Response.Token,
+				Value:    ctx.Response.Token,
 				Path:     "/",
-				Expires:  time.Unix(0, int64(service.Response.Expired*1000)),
+				Expires:  time.Unix(0, int64(ctx.Response.Expired*1000)),
 				HttpOnly: true,
 				SameSite: http.SameSiteNoneMode,
 				Secure:   true,
 			}
 			http.SetCookie(rw, cookie)
-			log.Print("Set cookie:", service.Response.Token)
+			log.Print("Set cookie:", ctx.Response.Token)
 		} else {
 			c := &http.Cookie{
 				Name:     "session",
@@ -162,8 +163,8 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	rw.WriteHeader(int(service.Response.Code))
-	_, err = bytes.NewBuffer(service.Response.Body).WriteTo(rw)
+	rw.WriteHeader(int(ctx.Response.Code))
+	_, err = bytes.NewBuffer(ctx.Response.Body).WriteTo(rw)
 	if err != nil {
 		log.Println("Proxy write data error: " + err.Error())
 	}
@@ -173,5 +174,5 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	duration := time.Now().UnixMicro() - start.UnixMicro()
-	gateway.saveCall(appID, callID, day, start, duration, url, "app", service)
+	gateway.saveCall(appID, callID, day, start, duration, url, "app", ctx)
 }

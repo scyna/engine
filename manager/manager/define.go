@@ -1,6 +1,6 @@
 package manager
 
-import scyna "github.com/scyna/go"
+import scyna "github.com/scyna/go/scyna"
 
 const (
 	MODULE_CODE   = "scyna.engine"

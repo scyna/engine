@@ -1,17 +1,12 @@
 package setting
 
 import (
-	scyna "github.com/scyna/go"
+	scyna "github.com/scyna/go/scyna"
 
 	"github.com/scylladb/gocqlx/v2/qb"
 )
 
-func Remove(s *scyna.Service) {
-	var request scyna.RemoveSettingRequest
-	if !s.Parse(&request) {
-		return
-	}
-
+func Remove(s *scyna.Context, request *scyna.RemoveSettingRequest) {
 	if err := qb.Delete("scyna.setting").
 		Where(qb.Eq("module_code"), qb.Eq("key")).
 		Query(scyna.DB).
@@ -23,6 +18,6 @@ func Remove(s *scyna.Service) {
 	s.Done(scyna.OK)
 
 	scyna.EmitSignal(scyna.SETTING_REMOVE_CHANNEL+request.Module, &scyna.SettingUpdatedSignal{
-		Key:   request.Key,
+		Key: request.Key,
 	})
 }

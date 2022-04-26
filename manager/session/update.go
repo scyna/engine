@@ -1,11 +1,12 @@
 package session
 
 import (
-	"github.com/scylladb/gocqlx/v2/qb"
-	scyna "github.com/scyna/go"
-	"google.golang.org/protobuf/proto"
 	"log"
 	"time"
+
+	"github.com/scylladb/gocqlx/v2/qb"
+	scyna "github.com/scyna/go/scyna"
+	"google.golang.org/protobuf/proto"
 )
 
 func Update(data []byte) {

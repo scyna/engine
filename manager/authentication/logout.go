@@ -4,17 +4,13 @@ import (
 	"log"
 	"time"
 
-	scyna "github.com/scyna/go"
+	scyna "github.com/scyna/go/scyna"
 
 	"github.com/scylladb/gocqlx/v2/qb"
 )
 
-func Logout(s *scyna.Service) {
+func Logout(s *scyna.Context, request *scyna.LogoutRequest) {
 	log.Println("Receive LogoutRequest")
-	var request scyna.LogoutRequest
-	if !s.Parse(&request) {
-		return
-	}
 
 	if !checkOrg(request.Organization, request.Secret) {
 		s.LOG.Warning("Organization not exist")

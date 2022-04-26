@@ -1,11 +1,12 @@
 package call
 
 import (
-	"github.com/gocql/gocql"
-	scyna "github.com/scyna/go"
-	"google.golang.org/protobuf/proto"
 	"log"
 	"time"
+
+	"github.com/gocql/gocql"
+	scyna "github.com/scyna/go/scyna"
+	"google.golang.org/protobuf/proto"
 )
 
 func Write(data []byte) {

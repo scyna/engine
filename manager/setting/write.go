@@ -3,17 +3,13 @@ package setting
 import (
 	"log"
 
-	scyna "github.com/scyna/go"
+	scyna "github.com/scyna/go/scyna"
 
 	"github.com/scylladb/gocqlx/v2/qb"
 )
 
-func Write(s *scyna.Service) {
+func Write(s *scyna.Context, request *scyna.WriteSettingRequest) {
 	log.Println("Receive WriteSettingRequest")
-	var request scyna.WriteSettingRequest
-	if !s.Parse(&request) {
-		return
-	}
 
 	if applied, err := qb.Insert("scyna.setting").
 		Columns("module_code", "key", "value").

@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	scyna "github.com/scyna/go"
+	scyna "github.com/scyna/go/scyna"
 
 	"github.com/scylladb/gocqlx/v2/qb"
 )
@@ -22,7 +22,7 @@ func Init() {
 	log.Fatal("Can not init id generator")
 }
 
-func GetID(s *scyna.Service) {
+func GetID(s *scyna.Context) {
 	log.Print("Receive GetIDRequest")
 	for i := 0; i < tryCount; i++ {
 		if ok, prefix, start, end := allocate(); ok {
@@ -31,6 +31,7 @@ func GetID(s *scyna.Service) {
 				Start:  start,
 				End:    end,
 			})
+			log.Print("Return GetIDResponse")
 			return
 		}
 	}
