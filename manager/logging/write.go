@@ -4,19 +4,10 @@ import (
 	"log"
 
 	scyna "github.com/scyna/go/scyna"
-
-	"google.golang.org/protobuf/proto"
 )
 
-func Write(data []byte) {
-	var signal scyna.WriteLogSignal
-	if err := proto.Unmarshal(data, &signal); err != nil {
-		scyna.LOG.Error("Can not parse log info")
-		return
-	}
-
+func Write(signal *scyna.WriteLogSignal) {
 	log.Print(signal.Text)
-
 	scyna.AddLog(scyna.LogData{
 		ID:       signal.Id,
 		Sequence: signal.Seq,

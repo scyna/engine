@@ -46,13 +46,13 @@ func main() {
 
 	/* generator */
 	scyna.RegisterStatelessService(scyna.GEN_GET_ID_URL, generator.GetID)
-	scyna.RegisterStatefullService[*scyna.GetSNRequest](scyna.GEN_GET_SN_URL, generator.GetSN)
+	scyna.RegisterStatefullService(scyna.GEN_GET_SN_URL, generator.GetSN)
 
 	/*logging*/
-	scyna.RegisterSignal(scyna.LOG_WRITE_CHANNEL, logging.Write)
+	scyna.RegisterStatefulSignal(scyna.LOG_WRITE_CHANNEL, logging.Write)
 
 	/*call*/
-	scyna.RegisterSignal(scyna.CALL_WRITE_CHANNEL, call.Write)
+	scyna.RegisterStatefulSignal(scyna.CALL_WRITE_CHANNEL, call.Write)
 
 	/*setting*/
 	scyna.RegisterStatefullService(scyna.SETTING_READ_URL, setting.Read)
@@ -81,8 +81,8 @@ func main() {
 	// }()
 
 	/*session*/
-	scyna.RegisterSignal(scyna.SESSION_END_CHANNEL, session.End)
-	scyna.RegisterSignal(scyna.SESSION_UPDATE_CHANNEL, session.Update)
+	scyna.RegisterStatefulSignal(scyna.SESSION_END_CHANNEL, session.End)
+	scyna.RegisterStatefulSignal(scyna.SESSION_UPDATE_CHANNEL, session.Update)
 	http.HandleFunc(scyna.SESSION_CREATE_URL, session.Create)
 	log.Println("scyna Manager Started")
 	log.Fatal(http.ListenAndServe(":8081", nil))

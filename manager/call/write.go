@@ -6,16 +6,9 @@ import (
 
 	"github.com/gocql/gocql"
 	scyna "github.com/scyna/go/scyna"
-	"google.golang.org/protobuf/proto"
 )
 
-func Write(data []byte) {
-	var signal scyna.WriteCallSignal
-	if err := proto.Unmarshal(data, &signal); err != nil {
-		scyna.LOG.Error("Can not parse WriteCallSignal")
-		return
-	}
-
+func Write(signal *scyna.WriteCallSignal) {
 	qBatch := scyna.DB.NewBatch(gocql.LoggedBatch)
 	qBatch.Query("INSERT INTO scyna.call(id, day, time, duration, request, response, source, status, session_id, caller_id)"+
 		" VALUES (?,?,?,?,?,?,?,?,?,?)",

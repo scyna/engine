@@ -6,16 +6,9 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/go/scyna"
-	"google.golang.org/protobuf/proto"
 )
 
-func Update(data []byte) {
-	var signal scyna.UpdateSessionSignal
-	if err := proto.Unmarshal(data, &signal); err != nil {
-		scyna.LOG.Error("Can not parse UpdateSessionSignal")
-		return
-	}
-
+func Update(signal *scyna.UpdateSessionSignal) {
 	if applied, err := qb.Update("scyna.session").
 		Set("last_update").
 		Where(qb.Eq("id")).

@@ -6,16 +6,9 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/go/scyna"
-	"google.golang.org/protobuf/proto"
 )
 
-func End(data []byte) {
-	var signal scyna.EndSessionSignal
-	if err := proto.Unmarshal(data, &signal); err != nil {
-		scyna.LOG.Error("Can not parse EndSessionSignal")
-		return
-	}
-
+func End(signal *scyna.EndSessionSignal) {
 	if applied, err := qb.Update("scyna.session").
 		Set("end", "exit_code").
 		Where(qb.Eq("id")).Existing().
