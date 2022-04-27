@@ -29,8 +29,7 @@ func main() {
 	secret := flag.String("secret", "123456", "scyna Manager Secret")
 
 	flag.Parse()
-
-	scyna.DirectInit(MODULE_CODE, &scyna.Configuration{
+	config := scyna.Configuration{
 		NatsUrl:      *natsUrl,
 		NatsUsername: *natsUsername,
 		NatsPassword: *natsPassword,
@@ -38,7 +37,10 @@ func main() {
 		DBUsername:   *dbUsername,
 		DBPassword:   *dbPassword,
 		DBLocation:   *dbLocation,
-	})
+	}
+
+	/* Init module */
+	scyna.DirectInit(MODULE_CODE, &config)
 	defer scyna.Release()
 	generator.Init()
 	session.Init(MODULE_CODE, *secret)
@@ -63,6 +65,9 @@ func main() {
 	scyna.RegisterStatefullService(scyna.AUTH_CREATE_URL, authentication.Create)
 	scyna.RegisterStatefullService(scyna.AUTH_GET_URL, authentication.Get)
 	scyna.RegisterStatefullService(scyna.AUTH_LOGOUT_URL, authentication.Logout)
+
+	/* Update config */
+	setting.UpdateDefautConfig(&config)
 
 	go func() {
 		gateway_ := gateway.NewGateway()
