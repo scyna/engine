@@ -48,7 +48,7 @@ func main() {
 
 	/* generator */
 	scyna.RegisterStatelessService(scyna.GEN_GET_ID_URL, generator.GetID)
-	scyna.RegisterStatefullService(scyna.GEN_GET_SN_URL, generator.GetSN)
+	scyna.RegisterStatefulService(scyna.GEN_GET_SN_URL, generator.GetSN)
 
 	/*logging*/
 	scyna.RegisterStatefulSignal(scyna.LOG_WRITE_CHANNEL, logging.Write)
@@ -57,38 +57,38 @@ func main() {
 	scyna.RegisterStatefulSignal(scyna.CALL_WRITE_CHANNEL, call.Write)
 
 	/*setting*/
-	scyna.RegisterStatefullService(scyna.SETTING_READ_URL, setting.Read)
-	scyna.RegisterStatefullService(scyna.SETTING_WRITE_URL, setting.Write)
-	scyna.RegisterStatefullService(scyna.SETTING_REMOVE_URL, setting.Remove)
+	scyna.RegisterStatefulService(scyna.SETTING_READ_URL, setting.Read)
+	scyna.RegisterStatefulService(scyna.SETTING_WRITE_URL, setting.Write)
+	scyna.RegisterStatefulService(scyna.SETTING_REMOVE_URL, setting.Remove)
 
 	/*authentication*/
-	scyna.RegisterStatefullService(scyna.AUTH_CREATE_URL, authentication.Create)
-	scyna.RegisterStatefullService(scyna.AUTH_GET_URL, authentication.Get)
-	scyna.RegisterStatefullService(scyna.AUTH_LOGOUT_URL, authentication.Logout)
+	scyna.RegisterStatefulService(scyna.AUTH_CREATE_URL, authentication.Create)
+	scyna.RegisterStatefulService(scyna.AUTH_GET_URL, authentication.Get)
+	scyna.RegisterStatefulService(scyna.AUTH_LOGOUT_URL, authentication.Logout)
 
 	/* Update config */
 	setting.UpdateDefautConfig(&config)
 
 	go func() {
 		gateway_ := gateway.NewGateway()
-		log.Println("scyna Gateway Started")
+		log.Println("Scyna Gateway Started")
 		if err := http.ListenAndServe(":8443", gateway_); err != nil {
 			log.Println("Gateway:" + err.Error())
 		}
 	}()
 
-	// go func() {
-	// 	proxy_ := proxy.NewProxy()
-	// 	log.Println("scyna Proxy Started")
-	// 	if err := http.ListenAndServe(":8080", proxy_); err != nil {
-	// 		log.Println("Proxy:" + err.Error())
-	// 	}
-	// }()
+	//go func() {
+	//	proxy_ := proxy.NewProxy()
+	//	log.Println("Scyna Proxy Started")
+	//	if err := http.ListenAndServe(":8080", proxy_); err != nil {
+	//		log.Println("Proxy:" + err.Error())
+	//	}
+	//}()
 
 	/*session*/
 	scyna.RegisterStatefulSignal(scyna.SESSION_END_CHANNEL, session.End)
 	scyna.RegisterStatefulSignal(scyna.SESSION_UPDATE_CHANNEL, session.Update)
 	http.HandleFunc(scyna.SESSION_CREATE_URL, session.Create)
-	log.Println("scyna Manager Started")
+	log.Println("Scyna Manager Started")
 	log.Fatal(http.ListenAndServe(":8081", nil))
 }

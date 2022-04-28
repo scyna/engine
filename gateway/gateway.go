@@ -17,7 +17,10 @@ type Gateway struct {
 }
 
 func NewGateway() *Gateway {
-	ret := &Gateway{Queries: NewQueryPool()}
+	ret := &Gateway{
+		Queries:  NewQueryPool(),
+		Contexts: scyna.NewContextPool(),
+	}
 	ret.initApplications()
 	return ret
 }
