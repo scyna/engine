@@ -10,17 +10,13 @@ import (
 func Write(s *scyna.Context, request *scyna.WriteSettingRequest) {
 	log.Println("Receive WriteSettingRequest")
 
-	if applied, err := qb.Insert("scyna.setting").
+	if err := qb.Insert("scyna.setting").
 		Columns("module_code", "key", "value").
-		Unique().
 		Query(scyna.DB).
 		Bind(request.Module, request.Key, request.Value).
-		ExecCASRelease(); !applied {
-		if err != nil {
-			s.LOG.Error("WriteSetting: " + err.Error())
-			s.Error(scyna.REQUEST_INVALID)
-			return
-		}
+		ExecRelease(); err != nil {
+		s.LOG.Error("WriteSetting: " + err.Error())
+		s.Error(scyna.REQUEST_INVALID)
 		return
 	}
 

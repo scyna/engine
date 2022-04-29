@@ -29,8 +29,7 @@ func main() {
 	secret := flag.String("secret", "123456", "scyna Manager Secret")
 
 	flag.Parse()
-
-	scyna.DirectInit(MODULE_CODE, &scyna.Configuration{
+	config := scyna.Configuration{
 		NatsUrl:      *natsUrl,
 		NatsUsername: *natsUsername,
 		NatsPassword: *natsPassword,
@@ -38,7 +37,10 @@ func main() {
 		DBUsername:   *dbUsername,
 		DBPassword:   *dbPassword,
 		DBLocation:   *dbLocation,
-	})
+	}
+
+	/* Init module */
+	scyna.DirectInit(MODULE_CODE, &config)
 	defer scyna.Release()
 	generator.Init()
 	session.Init(MODULE_CODE, *secret)
@@ -64,26 +66,29 @@ func main() {
 	scyna.RegisterStatefulService(scyna.AUTH_GET_URL, authentication.Get)
 	scyna.RegisterStatefulService(scyna.AUTH_LOGOUT_URL, authentication.Logout)
 
+	/* Update config */
+	setting.UpdateDefautConfig(&config)
+
 	go func() {
 		gateway_ := gateway.NewGateway()
-		log.Println("scyna Gateway Started")
+		log.Println("Scyna Gateway Started")
 		if err := http.ListenAndServe(":8443", gateway_); err != nil {
 			log.Println("Gateway:" + err.Error())
 		}
 	}()
 
-	// go func() {
-	// 	proxy_ := proxy.NewProxy()
-	// 	log.Println("scyna Proxy Started")
-	// 	if err := http.ListenAndServe(":8080", proxy_); err != nil {
-	// 		log.Println("Proxy:" + err.Error())
-	// 	}
-	// }()
+	//go func() {
+	//	proxy_ := proxy.NewProxy()
+	//	log.Println("Scyna Proxy Started")
+	//	if err := http.ListenAndServe(":8080", proxy_); err != nil {
+	//		log.Println("Proxy:" + err.Error())
+	//	}
+	//}()
 
 	/*session*/
 	scyna.RegisterSignal(scyna.SESSION_END_CHANNEL, session.End)
 	scyna.RegisterSignal(scyna.SESSION_UPDATE_CHANNEL, session.Update)
 	http.HandleFunc(scyna.SESSION_CREATE_URL, session.Create)
-	log.Println("scyna Manager Started")
+	log.Println("Scyna Manager Started")
 	log.Fatal(http.ListenAndServe(":8081", nil))
 }
