@@ -8,7 +8,7 @@ import (
 	"github.com/scyna/go/scyna"
 )
 
-func Update(signal *scyna.UpdateSessionSignal) {
+func Update(LOG scyna.Logger, signal *scyna.UpdateSessionSignal) {
 	if applied, err := qb.Update("scyna.session").
 		Set("last_update").
 		Where(qb.Eq("id"), qb.Eq("module_code")).

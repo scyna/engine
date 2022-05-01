@@ -6,7 +6,7 @@ import (
 	"github.com/scyna/go/scyna"
 )
 
-func Write(signal *scyna.WriteLogSignal) {
+func Write(LOG scyna.Logger, signal *scyna.WriteLogSignal) {
 	log.Print(signal.Text)
 	scyna.AddLog(scyna.LogData{
 		ID:       signal.Id,

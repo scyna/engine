@@ -47,24 +47,24 @@ func main() {
 	scyna.UseDirectLog(5)
 
 	/* generator */
-	scyna.RegisterStatelessService(scyna.GEN_GET_ID_URL, generator.GetID)
-	scyna.RegisterStatefulService(scyna.GEN_GET_SN_URL, generator.GetSN)
+	scyna.RegisterServiceLite(scyna.GEN_GET_ID_URL, generator.GetID)
+	scyna.RegisterService(scyna.GEN_GET_SN_URL, generator.GetSN)
 
 	/*logging*/
-	scyna.RegisterStatefulSignal(scyna.LOG_WRITE_CHANNEL, logging.Write)
+	scyna.RegisterSignal(scyna.LOG_WRITE_CHANNEL, logging.Write)
 
 	/*call*/
-	scyna.RegisterStatefulSignal(scyna.CALL_WRITE_CHANNEL, call.Write)
+	scyna.RegisterSignal(scyna.CALL_WRITE_CHANNEL, call.Write)
 
 	/*setting*/
-	scyna.RegisterStatefulService(scyna.SETTING_READ_URL, setting.Read)
-	scyna.RegisterStatefulService(scyna.SETTING_WRITE_URL, setting.Write)
-	scyna.RegisterStatefulService(scyna.SETTING_REMOVE_URL, setting.Remove)
+	scyna.RegisterService(scyna.SETTING_READ_URL, setting.Read)
+	scyna.RegisterService(scyna.SETTING_WRITE_URL, setting.Write)
+	scyna.RegisterService(scyna.SETTING_REMOVE_URL, setting.Remove)
 
 	/*authentication*/
-	scyna.RegisterStatefulService(scyna.AUTH_CREATE_URL, authentication.Create)
-	scyna.RegisterStatefulService(scyna.AUTH_GET_URL, authentication.Get)
-	scyna.RegisterStatefulService(scyna.AUTH_LOGOUT_URL, authentication.Logout)
+	scyna.RegisterService(scyna.AUTH_CREATE_URL, authentication.Create)
+	scyna.RegisterService(scyna.AUTH_GET_URL, authentication.Get)
+	scyna.RegisterService(scyna.AUTH_LOGOUT_URL, authentication.Logout)
 
 	/* Update config */
 	setting.UpdateDefautConfig(&config)
@@ -86,8 +86,8 @@ func main() {
 	//}()
 
 	/*session*/
-	scyna.RegisterStatefulSignal(scyna.SESSION_END_CHANNEL, session.End)
-	scyna.RegisterStatefulSignal(scyna.SESSION_UPDATE_CHANNEL, session.Update)
+	scyna.RegisterSignal(scyna.SESSION_END_CHANNEL, session.End)
+	scyna.RegisterSignal(scyna.SESSION_UPDATE_CHANNEL, session.Update)
 	http.HandleFunc(scyna.SESSION_CREATE_URL, session.Create)
 	log.Println("Scyna Manager Started")
 	log.Fatal(http.ListenAndServe(":8081", nil))

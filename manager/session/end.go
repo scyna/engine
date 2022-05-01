@@ -8,7 +8,7 @@ import (
 	"github.com/scyna/go/scyna"
 )
 
-func End(signal *scyna.EndSessionSignal) {
+func End(LOG scyna.Logger, signal *scyna.EndSessionSignal) {
 	if applied, err := qb.Update("scyna.session").
 		Set("end", "exit_code").
 		Where(qb.Eq("id"), qb.Eq("module_code")).Existing().
