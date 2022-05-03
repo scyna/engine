@@ -8,7 +8,7 @@ import (
 	"github.com/scyna/go/scyna"
 )
 
-func Write(LOG scyna.Logger, signal *scyna.WriteCallSignal) {
+func Write(signal *scyna.WriteCallSignal) {
 	qBatch := scyna.DB.NewBatch(gocql.LoggedBatch)
 	qBatch.Query("INSERT INTO scyna.call(id, day, time, duration, request, response, source, status, session_id, caller_id)"+
 		" VALUES (?,?,?,?,?,?,?,?,?,?)",
