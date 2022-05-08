@@ -9,6 +9,7 @@ CREATE TABLE scyna.trace
     source_id   bigint,
     PRIMARY KEY ((path, day), id)
 );
+CREATE INDEX ON scyna.trace(id);
 
 DROP TABLE IF EXISTS scyna.span;
 CREATE TABLE scyna.span
