@@ -25,7 +25,7 @@ CREATE TABLE scyna.tag
     trace_id     bigint,
     key          text,
     value        blob,
-    PRIMARY KEY (trace_id, tag)
+    PRIMARY KEY (trace_id, key)
 );
 
 DROP TABLE IF EXISTS scyna.log;
