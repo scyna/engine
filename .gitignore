@@ -90,3 +90,4 @@ fabric.properties
 
 # Dockerbuild script
 .build
+docker.sh

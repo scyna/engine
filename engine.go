@@ -19,6 +19,7 @@ import (
 const MODULE_CODE = "scyna.engine"
 
 func main() {
+	port := flag.String("port", "8081", "Port")
 	natsUrl := flag.String("nats_url", "127.0.0.1", "Nats URL")
 	natsUsername := flag.String("nats_username", "", "Nats Username")
 	natsPassword := flag.String("nats_password", "", "Nats Password")
@@ -90,5 +91,5 @@ func main() {
 	scyna.RegisterSignalLite(scyna.SESSION_UPDATE_CHANNEL, session.Update)
 	http.HandleFunc(scyna.SESSION_CREATE_URL, session.Create)
 	log.Println("Scyna Manager Started")
-	log.Fatal(http.ListenAndServe(":8081", nil))
+	log.Fatal(http.ListenAndServe(":"+*port, nil))
 }
