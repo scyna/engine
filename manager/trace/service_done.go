@@ -5,7 +5,7 @@ import (
 	scyna "github.com/scyna/core"
 )
 
-func ServiceDone(signal *scyna.ServiceDoneSignal) {
+func ServiceDone(signal *scyna.EnpointDoneSignal) {
 	qb.Insert("scyna.tag").
 		Columns("trace_id", "key", "value").
 		Query(scyna.DB).

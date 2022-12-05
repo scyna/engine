@@ -56,8 +56,8 @@ func main() {
 	scyna.UseDirectLog(5)
 
 	/* generator */
-	scyna.RegisterServiceLite(scyna.GEN_GET_ID_URL, generator.GetID)
-	scyna.RegisterService(scyna.GEN_GET_SN_URL, generator.GetSN)
+	scyna.RegisterEndpointLite(scyna.GEN_GET_ID_URL, generator.GetID)
+	scyna.RegisterEndpoint(scyna.GEN_GET_SN_URL, generator.GetSN)
 
 	/*logging*/
 	scyna.RegisterSignal(scyna.LOG_CREATED_CHANNEL, logging.Write)
@@ -65,21 +65,21 @@ func main() {
 	/*trace*/
 	scyna.RegisterSignal(scyna.TRACE_CREATED_CHANNEL, trace.TraceCreated)
 	scyna.RegisterSignal(scyna.TAG_CREATED_CHANNEL, trace.TagCreated)
-	scyna.RegisterSignal(scyna.SERVICE_DONE_CHANNEL, trace.ServiceDone)
+	scyna.RegisterSignal(scyna.ENDPOINT_DONE_CHANNEL, trace.ServiceDone)
 
 	/*setting*/
-	scyna.RegisterService(scyna.SETTING_READ_URL, setting.Read)
-	scyna.RegisterService(scyna.SETTING_WRITE_URL, setting.Write)
-	scyna.RegisterService(scyna.SETTING_REMOVE_URL, setting.Remove)
+	scyna.RegisterEndpoint(scyna.SETTING_READ_URL, setting.Read)
+	scyna.RegisterEndpoint(scyna.SETTING_WRITE_URL, setting.Write)
+	scyna.RegisterEndpoint(scyna.SETTING_REMOVE_URL, setting.Remove)
 
 	/*authentication*/
-	scyna.RegisterService(scyna.AUTH_CREATE_URL, authentication.Create)
-	scyna.RegisterService(scyna.AUTH_GET_URL, authentication.Get)
-	scyna.RegisterService(scyna.AUTH_LOGOUT_URL, authentication.Logout)
+	scyna.RegisterEndpoint(scyna.AUTH_CREATE_URL, authentication.Create)
+	scyna.RegisterEndpoint(scyna.AUTH_GET_URL, authentication.Get)
+	scyna.RegisterEndpoint(scyna.AUTH_LOGOUT_URL, authentication.Logout)
 
 	/* task */
-	scyna.RegisterService(scyna.START_TASK_URL, scheduler.StartTask)
-	scyna.RegisterService(scyna.STOP_TASK_URL, scheduler.StopTask)
+	scyna.RegisterEndpoint(scyna.START_TASK_URL, scheduler.StartTask)
+	scyna.RegisterEndpoint(scyna.STOP_TASK_URL, scheduler.StopTask)
 
 	/* Update config */
 	setting.UpdateDefaultConfig(&config)

@@ -55,7 +55,7 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		ParentID:  0,
 		Time:      time.Now(),
 		Path:      url,
-		Type:      scyna.TRACE_SERVICE,
+		Type:      scyna.TRACE_ENDPOINT,
 		Source:    clientID,
 		SessionID: scyna.Session.ID(),
 	}

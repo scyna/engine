@@ -7,7 +7,7 @@ import (
 	scyna "github.com/scyna/core"
 )
 
-func Read(s *scyna.Service, request *scyna.ReadSettingRequest) {
+func Read(s *scyna.Endpoint, request *scyna.ReadSettingRequest) {
 	log.Println("Receive ReadSettingRequest")
 
 	var value string

@@ -10,7 +10,7 @@ import (
 
 const snPartitionSize = 500
 
-func GetSN(s *scyna.Service, request *scyna.GetSNRequest) {
+func GetSN(s *scyna.Endpoint, request *scyna.GetSNRequest) {
 	log.Print("Receive GetSNRequest")
 
 	for i := 0; i < tryCount; i++ {

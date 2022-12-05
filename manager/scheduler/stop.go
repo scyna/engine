@@ -5,7 +5,7 @@ import (
 	scyna "github.com/scyna/core"
 )
 
-func StopTask(s *scyna.Service, request *scyna.StopTaskRequest) {
+func StopTask(s *scyna.Endpoint, request *scyna.StopTaskRequest) {
 
 	if err := qb.Update("scyna.task").
 		Set("done").

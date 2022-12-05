@@ -8,7 +8,7 @@ import (
 	scyna "github.com/scyna/core"
 )
 
-func Logout(s *scyna.Service, request *scyna.LogoutRequest) {
+func Logout(s *scyna.Endpoint, request *scyna.LogoutRequest) {
 	log.Println("Receive LogoutRequest")
 
 	if !checkOrg(request.Organization, request.Secret) {

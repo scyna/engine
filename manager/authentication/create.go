@@ -11,7 +11,7 @@ import (
 
 var serialNumber = scyna.InitSerialNumber("scyna.auth")
 
-func Create(s *scyna.Service, request *scyna.CreateAuthRequest) {
+func Create(s *scyna.Endpoint, request *scyna.CreateAuthRequest) {
 	log.Println("Receive CreateAuthRequest")
 
 	if !checkOrg(request.Organization, request.Secret) {

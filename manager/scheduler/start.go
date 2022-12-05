@@ -10,7 +10,7 @@ import (
 	scyna "github.com/scyna/core"
 )
 
-func StartTask(s *scyna.Service, request *scyna.StartTaskRequest) {
+func StartTask(s *scyna.Endpoint, request *scyna.StartTaskRequest) {
 	if err := validateStartTaskRequest(request); err != nil {
 		s.Error(scyna.REQUEST_INVALID)
 		s.Logger.Error(err.Error())

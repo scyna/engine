@@ -5,7 +5,7 @@ import (
 	scyna "github.com/scyna/core"
 )
 
-func Remove(s *scyna.Service, request *scyna.RemoveSettingRequest) {
+func Remove(s *scyna.Endpoint, request *scyna.RemoveSettingRequest) {
 	if err := qb.Delete("scyna.setting").
 		Where(qb.Eq("context"), qb.Eq("key")).
 		Query(scyna.DB).

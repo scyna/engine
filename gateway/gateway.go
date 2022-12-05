@@ -51,7 +51,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		ParentID: 0,
 		Time:     time.Now(),
 		Path:     url,
-		Type:     scyna.TRACE_SERVICE,
+		Type:     scyna.TRACE_ENDPOINT,
 		Source:   app.Code,
 	}
 	defer trace.Save()
