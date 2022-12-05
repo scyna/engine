@@ -17,7 +17,7 @@ CREATE TABLE scyna.doing
 DROP TABLE IF EXISTS scyna.task;
 CREATE TABLE scyna.task
 (
-    id           bigint PRIMARY KEY ,
+    id           bigint PRIMARY KEY,
     topic        text,
     data         blob,
     start        timestamp,

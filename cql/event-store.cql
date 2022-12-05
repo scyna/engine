@@ -1,5 +1,5 @@
 /*event store template*/
-DROP TABLE IF EXISTS scyna.event_store;
+DROP TABLE IF EXISTS module_name.event_store;
 CREATE TABLE module_name.event_store
 (
     event_id        bigint,

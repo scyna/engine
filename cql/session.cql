@@ -1,7 +1,5 @@
-USE scyna;
-
-DROP TABLE IF EXISTS session;
-CREATE TABLE session
+DROP TABLE IF EXISTS scyna.session;
+CREATE TABLE scyna.session
 (
     id          bigint,
     context     text,
@@ -13,8 +11,8 @@ CREATE TABLE session
 );
 CREATE INDEX ON scyna.session (id);
 
-DROP TABLE IF EXISTS session_log;
-CREATE TABLE session_log
+DROP TABLE IF EXISTS scyna.session_log;
+CREATE TABLE scyna.session_log
 (
     session_id bigint,
     day        int,
@@ -22,6 +20,6 @@ CREATE TABLE session_log
     seq        bigint,
     message    text,
     level      smallint,
-    PRIMARY KEY ((session_id, day), seq) /*sesion_has_log*/
+    PRIMARY KEY ((session_id, day), seq) /*session_has_log*/
 );
 

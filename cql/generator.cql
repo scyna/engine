@@ -1,8 +1,6 @@
-USE scyna;
-
 /*id*/
-DROP TABLE IF EXISTS gen_id;
-CREATE TABLE gen_id
+DROP TABLE IF EXISTS scyna.gen_id;
+CREATE TABLE scyna.gen_id
 (
     prefix smallint,
     seed   bigint,
@@ -10,8 +8,8 @@ CREATE TABLE gen_id
 ) WITH CLUSTERING ORDER BY (seed DESC);
 
 /*serial number*/
-DROP TABLE IF EXISTS gen_sn;
-CREATE TABLE gen_sn
+DROP TABLE IF EXISTS scyna.gen_sn;
+CREATE TABLE scyna.gen_sn
 (
     key     text,     
     prefix  int,

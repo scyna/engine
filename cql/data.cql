@@ -1,5 +1,3 @@
-USE scyna;
-
 /*scyna domain*/
 insert into scyna.domain(code, name, password) values ('scyna', 'Scyna Platform', '123456');
 
