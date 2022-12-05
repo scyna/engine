@@ -90,3 +90,23 @@ CREATE TABLE scyna.application_use_endpoint
     endpoint         text,   /*endpoint path*/
     PRIMARY KEY (application, endpoint)
 );
+
+DROP TABLE IF EXISTS scyna.authentication;
+CREATE TABLE scyna.authentication
+(
+    id      text PRIMARY KEY,
+    time    timestamp,
+    expired timestamp,
+    apps    list<text>,
+    uid     text,
+    data    blob,
+);
+
+DROP TABLE IF EXISTS scyna.app_has_auth;
+CREATE TABLE scyna.app_has_auth
+(
+    app_code text,
+    auth_id  text,
+    user_id  text,
+    PRIMARY KEY ( (app_code, user_id), auth_id )
+);
