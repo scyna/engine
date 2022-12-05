@@ -1,8 +1,9 @@
 package proxy
 
 import (
-	scyna "github.com/scyna/core"
 	"sync"
+
+	scyna "github.com/scyna/core"
 
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -18,9 +19,9 @@ type QueryPool struct {
 
 func NewQuery() *Query {
 	return &Query{
-		Authenticate: qb.Select("scyna.client_use_service").
-			Columns("service_url").
-			Where(qb.Eq("client_id"), qb.Eq("service_url")).
+		Authenticate: qb.Select("scyna.client_use_endpoint").
+			Columns("endpoint").
+			Where(qb.Eq("client"), qb.Eq("endpoint")).
 			Limit(1).
 			Query(scyna.DB),
 	}

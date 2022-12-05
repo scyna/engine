@@ -41,9 +41,9 @@ CREATE TABLE scyna.application
 );
 CREATE INDEX ON scyna.application (code);
 
-/*service: Command or Query*/
-DROP TABLE IF EXISTS scyna.service;
-CREATE TABLE scyna.service
+/*endpoint: Command or Query*/
+DROP TABLE IF EXISTS scyna.endpoint;
+CREATE TABLE scyna.endpoint
 (
     context     text, /* iot.control */
     url         text, /* iot/control/poweron */  
@@ -51,7 +51,7 @@ CREATE TABLE scyna.service
     description text,
     PRIMARY KEY (context, url)
 );
-CREATE INDEX ON scyna.service (url);
+CREATE INDEX ON scyna.endpoint (url);
 
 /*event*/
 DROP TABLE IF EXISTS scyna.event;
@@ -75,18 +75,18 @@ CREATE TABLE scyna.setting
 );
 
 /*relations*/
-DROP TABLE IF EXISTS scyna.client_use_service;
-CREATE TABLE scyna.client_use_service
+DROP TABLE IF EXISTS scyna.client_use_endpoint;
+CREATE TABLE scyna.client_use_endpoint
 (
     client      text,   /*client id*/  
-    service     text,   /*service path*/
-    PRIMARY KEY (client, service)
+    endpoint     text,   /*endpoint path*/
+    PRIMARY KEY (client, endpoint)
 );
 
-DROP TABLE IF EXISTS scyna.application_use_service;
-CREATE TABLE scyna.application_use_service
+DROP TABLE IF EXISTS scyna.application_use_endpoint;
+CREATE TABLE scyna.application_use_endpoint
 (
     application     text,   /*application code*/  
-    service         text,   /*service path*/
-    PRIMARY KEY (application, service)
+    endpoint         text,   /*endpoint path*/
+    PRIMARY KEY (application, endpoint)
 );

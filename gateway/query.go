@@ -20,9 +20,9 @@ type QueryPool struct {
 
 func NewQuery() *Query {
 	return &Query{
-		CheckService: qb.Select("scyna.app_has_service").
-			Columns("service_url").
-			Where(qb.Eq("app_code"), qb.Eq("service_url")).
+		CheckService: qb.Select("scyna.application_use_endpoint").
+			Columns("endpoint").
+			Where(qb.Eq("application"), qb.Eq("endpoint")).
 			Limit(1).
 			Query(scyna.DB),
 

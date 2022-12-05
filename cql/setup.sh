@@ -3,7 +3,7 @@ host=localhost
 username=
 password=
 
-files='_cleanup.cql generator.cql domain.cql session.cql event-store.cql trace.cql task.cql data.cql'
+files='_cleanup.cql generator.cql domain.cql session.cql trace.cql task.cql data.cql'
 
 
 for file in $files
