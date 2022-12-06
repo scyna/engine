@@ -1,4 +1,4 @@
-FROM 1.19.3-alpine3.17 AS build-env
+FROM golang:1.19.3-alpine3.16 AS build-env
 
 ENV GO111MODULE=on
 
