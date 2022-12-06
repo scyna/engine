@@ -91,3 +91,5 @@ fabric.properties
 # Dockerbuild script
 .build
 docker.sh
+.cert/localhost.key
+.cert/localhost.crt

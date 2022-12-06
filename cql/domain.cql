@@ -37,6 +37,7 @@ CREATE TABLE scyna.application
     domain      text, /* iot */
     code        text, /* fota */
     name        text, /* FOTA Manager */
+    auth        text,
     PRIMARY KEY(domain, code)
 );
 CREATE INDEX ON scyna.application (code);

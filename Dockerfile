@@ -4,6 +4,7 @@ ENV GO111MODULE=on
 
 WORKDIR /workspace/engine
 
+COPY ./.cert/ ./cert
 COPY ./gateway/ ./gateway
 COPY ./proxy/ ./proxy
 COPY ./manager/ ./manager

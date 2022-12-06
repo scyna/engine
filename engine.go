@@ -34,6 +34,7 @@ func main() {
 	dbLocation := flag.String("db_location", "", "DB Location")
 	secret := flag.String("secret", "123456", "scyna Manager Secret")
 
+	certificateEnable := flag.Bool("certificateEnable", false, "Certificate Key")
 	certificateFile := flag.String("certificateFile", "", "Certificate Key")
 	certificateKey := flag.String("certificateKey", "", "Certificate File")
 
@@ -87,7 +88,7 @@ func main() {
 	const DEFAULT_CERT_FILE = ".cert/localhost.crt"
 	const DEFAULT_CERT_KEY = ".cert/localhost.key"
 
-	if *certificateFile == "" || *certificateKey == "" {
+	if *certificateEnable && (*certificateFile == "" || *certificateKey == "") {
 		*certificateFile = DEFAULT_CERT_FILE
 		*certificateKey = DEFAULT_CERT_KEY
 	}
@@ -95,16 +96,30 @@ func main() {
 	go func() {
 		gateway_ := gateway.NewGateway()
 		log.Println("Scyna Gateway Start with port " + *gatewayPort)
-		if err := http.ListenAndServeTLS(":"+*gatewayPort, *certificateFile, *certificateKey, gateway_); err != nil {
-			log.Println("Gateway: " + err.Error())
+
+		if *certificateEnable {
+			if err := http.ListenAndServeTLS(":"+*gatewayPort, *certificateFile, *certificateKey, gateway_); err != nil {
+				log.Println("Gateway: " + err.Error())
+			}
+		} else {
+			if err := http.ListenAndServe(":"+*gatewayPort, gateway_); err != nil {
+				log.Println("Gateway: " + err.Error())
+			}
 		}
 	}()
 
 	go func() {
 		proxy_ := proxy.NewProxy()
 		log.Println("Scyna Proxy Start with port " + *proxyPort)
-		if err := http.ListenAndServeTLS(":"+*proxyPort, *certificateFile, *certificateKey, proxy_); err != nil {
-			log.Println("Proxy: " + err.Error())
+
+		if *certificateEnable && *certificateFile != "" {
+			if err := http.ListenAndServeTLS(":"+*proxyPort, *certificateFile, *certificateKey, proxy_); err != nil {
+				log.Println("Proxy: " + err.Error())
+			}
+		} else {
+			if err := http.ListenAndServe(":"+*proxyPort, proxy_); err != nil {
+				log.Println("Proxy: " + err.Error())
+			}
 		}
 	}()
 
@@ -115,8 +130,13 @@ func main() {
 	scyna.RegisterSignal(scyna.SESSION_UPDATE_CHANNEL, session.Update)
 	http.HandleFunc(scyna.SESSION_CREATE_URL, session.Create)
 	log.Println("Scyna Manager Start with port " + *managerPort)
-	if err := http.ListenAndServe(":"+*managerPort, nil); err != nil {
-		scyna.Fatal(err)
+	if *certificateEnable && *certificateFile != "" {
+		if err := http.ListenAndServeTLS(":"+*managerPort, *certificateFile, *certificateKey, nil); err != nil {
+			scyna.Fatal(err)
+		}
+	} else {
+		if err := http.ListenAndServe(":"+*managerPort, nil); err != nil {
+			scyna.Fatal(err)
+		}
 	}
-	// scyna.Fatal(http.ListenAndServeTLS(":"+*managerPort, *certificateFile, *certificateKey, nil))
 }
