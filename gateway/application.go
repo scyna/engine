@@ -12,6 +12,7 @@ import (
 type Application struct {
 	Code    string `db:"code"`
 	Name    string `db:"name"`
+	Domain  string `db:"domain"`
 	AuthURL string `db:"auth"`
 }
 
@@ -31,7 +32,7 @@ func loadApplications() map[string]Application {
 	var apps []Application
 
 	if err := qb.Select("scyna.application").
-		Columns("code", "auth", "name").
+		Columns("code", "domain", "name").
 		Query(scyna.DB).
 		SelectRelease(&apps); err == nil {
 		for _, c := range apps {

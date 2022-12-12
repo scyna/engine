@@ -68,7 +68,7 @@ func createAuth(id string, apps []string, userID string) *scyna.Error {
 func checkOrg(code string, secret string) bool {
 
 	var secret_ string
-	if err := qb.Select("scyna.organization").
+	if err := qb.Select("scyna.domain").
 		Columns("password"). //FIXME: change to use secret
 		Where(qb.Eq("code")).
 		Query(scyna.DB).
