@@ -7,6 +7,7 @@ import (
 	"time"
 
 	scyna "github.com/scyna/core"
+	admin "github.com/scyna/go/engine/admin/service"
 	"github.com/scyna/go/engine/gateway"
 	"github.com/scyna/go/engine/manager/authentication"
 	"github.com/scyna/go/engine/manager/generator"
@@ -81,6 +82,12 @@ func main() {
 	/* task */
 	scyna.RegisterEndpoint(scyna.START_TASK_URL, scheduler.StartTask)
 	scyna.RegisterEndpoint(scyna.STOP_TASK_URL, scheduler.StopTask)
+
+	/* admin */
+	scyna.RegisterEndpoint(scyna.CREATE_DOMAIN_URL, admin.CreateDomainHandler)
+	scyna.RegisterEndpoint(scyna.CREATE_CLIENT_URL, admin.CreateClientHandler)
+	scyna.RegisterEndpoint(scyna.CREATE_CONTEXT_URL, admin.CreateContextHandler)
+	scyna.RegisterEndpoint(scyna.CREATE_ENDPOINT_URL, admin.CreateEndpointHandler)
 
 	/* Update config */
 	setting.UpdateDefaultConfig(&config)
