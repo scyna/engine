@@ -3,10 +3,11 @@ package admin
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	scyna "github.com/scyna/core"
+	"github.com/scyna/go/engine/admin/proto"
 	"github.com/scyna/go/engine/admin/repository"
 )
 
-func CreateConsumerHandler(s *scyna.Endpoint, request *scyna.CreateConsumerRequest) {
+func CreateConsumerHandler(s *scyna.Endpoint, request *proto.CreateConsumerRequest) {
 	s.Logger.Info("Receive CreateConsumerRequest")
 
 	if err := validateCreateConsumerRequest(request); err != nil {
@@ -24,12 +25,12 @@ func CreateConsumerHandler(s *scyna.Endpoint, request *scyna.CreateConsumerReque
 		return
 	}
 
-	/*TODO: create JetStream*/
+	/*TODO: Create JetStream Consumer*/
 
 	s.Done(scyna.OK)
 }
 
-func validateCreateConsumerRequest(request *scyna.CreateConsumerRequest) error {
+func validateCreateConsumerRequest(request *proto.CreateConsumerRequest) error {
 	return validation.ValidateStruct(request,
 		validation.Field(&request.Sender, validation.Required),
 		validation.Field(&request.Receiver, validation.Required))

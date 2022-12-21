@@ -3,10 +3,11 @@ package admin
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	scyna "github.com/scyna/core"
+	"github.com/scyna/go/engine/admin/proto"
 	"github.com/scyna/go/engine/admin/repository"
 )
 
-func CreateEndpointHandler(s *scyna.Endpoint, request *scyna.CreateEndpointRequest) {
+func CreateEndpointHandler(s *scyna.Endpoint, request *proto.CreateEndpointRequest) {
 	s.Logger.Info("Receive CreateEndpointRequest")
 
 	if err := validateCreateEndpointRequest(request); err != nil {
@@ -32,7 +33,7 @@ func CreateEndpointHandler(s *scyna.Endpoint, request *scyna.CreateEndpointReque
 	s.Done(scyna.OK)
 }
 
-func validateCreateEndpointRequest(request *scyna.CreateEndpointRequest) error {
+func validateCreateEndpointRequest(request *proto.CreateEndpointRequest) error {
 	return validation.ValidateStruct(request,
 		validation.Field(&request.Context, validation.Required),
 		validation.Field(&request.URL, validation.Required),

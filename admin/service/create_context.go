@@ -3,10 +3,11 @@ package admin
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	scyna "github.com/scyna/core"
+	"github.com/scyna/go/engine/admin/proto"
 	"github.com/scyna/go/engine/admin/repository"
 )
 
-func CreateContextHandler(s *scyna.Endpoint, request *scyna.CreateContextRequest) {
+func CreateContextHandler(s *scyna.Endpoint, request *proto.CreateContextRequest) {
 	s.Logger.Info("Receive CreateContextRequest")
 
 	if err := validateCreateContextRequest(request); err != nil {
@@ -30,10 +31,12 @@ func CreateContextHandler(s *scyna.Endpoint, request *scyna.CreateContextRequest
 		return
 	}
 
+	/*TODO: Create Stream*/
+
 	s.Done(scyna.OK)
 }
 
-func validateCreateContextRequest(request *scyna.CreateContextRequest) error {
+func validateCreateContextRequest(request *proto.CreateContextRequest) error {
 	return validation.ValidateStruct(request,
 		validation.Field(&request.Domain, validation.Required),
 		validation.Field(&request.Code, validation.Required),

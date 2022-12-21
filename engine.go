@@ -84,10 +84,10 @@ func main() {
 	scyna.RegisterEndpoint(scyna.STOP_TASK_URL, scheduler.StopTask)
 
 	/* admin */
-	scyna.RegisterEndpoint(scyna.CREATE_DOMAIN_URL, admin.CreateDomainHandler)
-	scyna.RegisterEndpoint(scyna.CREATE_CLIENT_URL, admin.CreateClientHandler)
-	scyna.RegisterEndpoint(scyna.CREATE_CONTEXT_URL, admin.CreateContextHandler)
-	scyna.RegisterEndpoint(scyna.CREATE_ENDPOINT_URL, admin.CreateEndpointHandler)
+	scyna.RegisterEndpoint(admin.CREATE_DOMAIN_URL, admin.CreateDomainHandler)
+	scyna.RegisterEndpoint(admin.CREATE_CLIENT_URL, admin.CreateClientHandler)
+	scyna.RegisterEndpoint(admin.CREATE_CONTEXT_URL, admin.CreateContextHandler)
+	scyna.RegisterEndpoint(admin.CREATE_ENDPOINT_URL, admin.CreateEndpointHandler)
 
 	/* Update config */
 	setting.UpdateDefaultConfig(&config)

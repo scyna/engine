@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package proto;
+option  optimize_for = CODE_SIZE;
+option  go_package = "./;proto";
+
+message CreateDomainRequest {
+  string Code = 1;
+  string Name = 2;
+}
+
+message CreateContextRequest {
+  string Domain = 1;
+  string Code = 2;
+  string Name = 3;
+}
+
+message CreateClientRequest{
+  string Domain = 1;
+  string ID = 2;
+  string Secret = 3;
+}
+
+message CreateEndpointRequest{
+  string Context = 1;
+  string URL = 2;
+  string Name = 3;
+}
+
+message CreateConsumerRequest{
+  string Sender = 1; /* sender context */
+  string Receiver = 2; /* receiver context */
+}
