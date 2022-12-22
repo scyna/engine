@@ -5,3 +5,5 @@ insert into scyna.domain(code, name, password) values ('scyna', 'Scyna Platform'
 insert into scyna.context(domain, code, name, secret) values ('scyna', 'scyna.engine', 'Scyna Engine', '123456');
 insert into scyna.context(domain, code, name, secret) values ('scyna', 'scyna.manager', 'Scyna Manager', '123456');
 insert into scyna.context(domain, code, name, secret) values ('scyna', 'scyna.test', 'Scyna Test', '123456');
+
+insert into scyna.client(domain, id, secret) VALUES ('scyna', 'admin', 'admin');
