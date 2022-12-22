@@ -1,0 +1,9 @@
+go 1.18
+
+use (
+	./engine
+	./core
+	./core/examples/hello
+	./core/examples/chat/account
+	./core/examples/chat/friend
+)
