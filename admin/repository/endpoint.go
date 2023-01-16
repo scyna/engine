@@ -11,7 +11,7 @@ type Endpoint struct {
 	Name    string `db:"name"`
 }
 
-func CreateEndpoint(LOG scyna.Logger, endpoint *Endpoint) *scyna.Error {
+func CreateEndpoint(LOG scyna.Logger, endpoint *Endpoint) scyna.Error {
 	if err := qb.Insert("scyna.endpoint").
 		Columns("context", "url", "name").
 		Query(scyna.DB).

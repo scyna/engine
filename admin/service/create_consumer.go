@@ -7,27 +7,24 @@ import (
 	"github.com/scyna/go/engine/admin/repository"
 )
 
-func CreateConsumerHandler(s *scyna.Endpoint, request *proto.CreateConsumerRequest) {
+func CreateConsumerHandler(s *scyna.Endpoint, request *proto.CreateConsumerRequest) scyna.Error {
 	s.Logger.Info("Receive CreateConsumerRequest")
 
 	if err := validateCreateConsumerRequest(request); err != nil {
-		s.Done(scyna.REQUEST_INVALID)
-		return
+		return scyna.REQUEST_INVALID
 	}
 
 	if _, context := repository.GetContext(s.Logger, request.Sender); context != nil {
-		s.Error(scyna.REQUEST_INVALID)
-		return
+		return scyna.REQUEST_INVALID
 	}
 
 	if _, context := repository.GetContext(s.Logger, request.Receiver); context != nil {
-		s.Error(scyna.REQUEST_INVALID)
-		return
+		return scyna.REQUEST_INVALID
 	}
 
 	/*TODO: Create JetStream Consumer*/
 
-	s.Done(scyna.OK)
+	return scyna.OK
 }
 
 func validateCreateConsumerRequest(request *proto.CreateConsumerRequest) error {

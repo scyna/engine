@@ -7,17 +7,15 @@ import (
 	"github.com/scyna/go/engine/admin/repository"
 )
 
-func CreateClientHandler(s *scyna.Endpoint, request *proto.CreateClientRequest) {
+func CreateClientHandler(s *scyna.Endpoint, request *proto.CreateClientRequest) scyna.Error {
 	s.Logger.Info("Receive CreateClientRequest")
 
 	if err := validateCreateClientRequest(request); err != nil {
-		s.Done(scyna.REQUEST_INVALID)
-		return
+		return scyna.REQUEST_INVALID
 	}
 
 	if _, domain := repository.GetDomain(s.Logger, request.Domain); domain != nil {
-		s.Error(scyna.REQUEST_INVALID)
-		return
+		return scyna.REQUEST_INVALID
 	}
 
 	client := repository.Client{
@@ -27,11 +25,10 @@ func CreateClientHandler(s *scyna.Endpoint, request *proto.CreateClientRequest) 
 	}
 
 	if err := repository.CreateClient(s.Logger, &client); err != nil {
-		s.Error(err)
-		return
+		return err
 	}
 
-	s.Done(scyna.OK)
+	return scyna.OK
 }
 
 func validateCreateClientRequest(request *proto.CreateClientRequest) error {

@@ -3,9 +3,10 @@ package scheduler
 import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func StopTask(s *scyna.Endpoint, request *scyna.StopTaskRequest) {
+func StopTask(s *scyna.Endpoint, request *scyna_proto.StopTaskRequest) scyna.Error {
 
 	if err := qb.Update("scyna.task").
 		Set("done").
@@ -13,10 +14,9 @@ func StopTask(s *scyna.Endpoint, request *scyna.StopTaskRequest) {
 		Query(scyna.DB).
 		Bind(true, request.Id).
 		ExecRelease(); err != nil {
-		s.Error(scyna.REQUEST_INVALID)
 		s.Logger.Error(err.Error())
-		return
+		return scyna.REQUEST_INVALID
 	}
 
-	s.Done(scyna.OK)
+	return scyna.OK
 }

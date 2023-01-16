@@ -16,7 +16,7 @@ func Init(module string, secret string) {
 	}
 }
 
-func newSession(context string, secret string) (uint64, *scyna.Error) {
+func newSession(context string, secret string) (uint64, scyna.Error) {
 	log.Print("Creating session for context: ", context)
 	var secret_ string
 	if err := qb.Select("scyna.context").

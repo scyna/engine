@@ -8,13 +8,13 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/gocql/gocql"
 	scyna "github.com/scyna/core"
+	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func StartTask(s *scyna.Endpoint, request *scyna.StartTaskRequest) {
+func StartTask(s *scyna.Endpoint, request *scyna_proto.StartTaskRequest) scyna.Error {
 	if err := validateStartTaskRequest(request); err != nil {
-		s.Error(scyna.REQUEST_INVALID)
 		s.Logger.Error(err.Error())
-		return
+		return scyna.REQUEST_INVALID
 	}
 
 	//TODO: Check module exits
@@ -36,15 +36,15 @@ func StartTask(s *scyna.Endpoint, request *scyna.StartTaskRequest) {
 	bucket := GetBucket(start) // Generate period id
 	qBatch.Query("INSERT INTO scyna.todo(bucket, task_id) VALUES (?, ?);", bucket, taskID)
 	if err := scyna.DB.ExecuteBatch(qBatch); err != nil {
-		s.Error(scyna.REQUEST_INVALID)
 		s.Logger.Error(err.Error())
-		return
+		return scyna.REQUEST_INVALID
 	}
 
-	s.Done(&scyna.StartTaskResponse{Id: taskID})
+	s.Done(&scyna_proto.StartTaskResponse{Id: taskID})
+	return scyna.OK
 }
 
-func validateStartTaskRequest(request *scyna.StartTaskRequest) error {
+func validateStartTaskRequest(request *scyna_proto.StartTaskRequest) error {
 	if int64(request.Time) < time.Now().Unix() {
 		return errors.New("task time is less than now")
 	}

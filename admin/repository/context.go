@@ -11,7 +11,7 @@ type Context struct {
 	Name   string `db:"name"`
 }
 
-func GetContext(LOG scyna.Logger, code string) (*scyna.Error, *Context) {
+func GetContext(LOG scyna.Logger, code string) (scyna.Error, *Context) {
 	var context Context
 
 	if err := qb.Select("scyna.context").
@@ -26,7 +26,7 @@ func GetContext(LOG scyna.Logger, code string) (*scyna.Error, *Context) {
 	return nil, &context
 }
 
-func CreateContext(LOG scyna.Logger, context *Context) *scyna.Error {
+func CreateContext(LOG scyna.Logger, context *Context) scyna.Error {
 
 	if err := qb.Insert("scyna.context").
 		Columns("domain", "code", "name").

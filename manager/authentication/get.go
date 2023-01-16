@@ -6,21 +6,22 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func Get(s *scyna.Endpoint, request *scyna.GetAuthRequest) {
+func Get(s *scyna.Endpoint, request *scyna_proto.GetAuthRequest) scyna.Error {
 	log.Println("Receive GetAuthRequest")
 	if expired, userID := getAuthentication(request.Token, request.App); expired != nil {
-		s.Done(&scyna.GetAuthResponse{
+		s.Done(&scyna_proto.GetAuthResponse{
 			Token:   request.Token,
 			UserID:  userID,
 			Expired: uint64(expired.UnixMicro()),
 		})
 	} else {
 		s.Logger.Warning("Not exists Token, App")
-		s.Error(scyna.REQUEST_INVALID)
-		return
+		return scyna.REQUEST_INVALID
 	}
+	return scyna.OK
 }
 
 func getAuthentication(token string, app string) (*time.Time, string) {

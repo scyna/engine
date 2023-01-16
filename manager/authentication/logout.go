@@ -6,25 +6,24 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func Logout(s *scyna.Endpoint, request *scyna.LogoutRequest) {
+func Logout(s *scyna.Endpoint, request *scyna_proto.LogoutRequest) scyna.Error {
 	log.Println("Receive LogoutRequest")
 
 	if !checkOrg(request.Organization, request.Secret) {
 		s.Logger.Warning("Organization not exist")
-		s.Error(scyna.REQUEST_INVALID)
-		return
+		return scyna.REQUEST_INVALID
 	}
 
 	if err := updateSession(request.Token, request.UserID); err != scyna.OK {
-		s.Error(err)
-		return
+		return err
 	}
-	s.Done(scyna.OK)
+	return scyna.OK
 }
 
-func updateSession(token string, userID string) *scyna.Error {
+func updateSession(token string, userID string) scyna.Error {
 	var userID_ string
 	err := qb.Select("scyna.authentication").
 		Columns("uid").

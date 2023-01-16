@@ -7,46 +7,44 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
 var serialNumber = scyna.InitSerialNumber("scyna.auth")
 
-func Create(s *scyna.Endpoint, request *scyna.CreateAuthRequest) {
+func Create(s *scyna.Endpoint, request *scyna_proto.CreateAuthRequest) scyna.Error {
 	log.Println("Receive CreateAuthRequest")
 
 	if !checkOrg(request.Organization, request.Secret) {
 		s.Logger.Warning("Organization not exist")
-		s.Error(scyna.REQUEST_INVALID)
-		return
+		return scyna.REQUEST_INVALID
 	}
 
 	if len(request.Apps) == 0 {
-		s.Error(scyna.REQUEST_INVALID)
-		return
+		return scyna.REQUEST_INVALID
 	}
 
 	for _, app := range request.Apps {
 		if !checkApp(app) {
 			scyna.LOG.Warning("App not exist: " + app)
-			s.Error(scyna.REQUEST_INVALID)
-			return
+			return scyna.REQUEST_INVALID
 		}
 	}
 
 	id := serialNumber.Next()
 	if err := createAuth(id, request.Apps, request.UserID); err != scyna.OK {
-		s.Error(err)
-		return
+		return err
 	}
 
 	now := time.Now()
-	s.Done(&scyna.CreateAuthResponse{
+	s.Done(&scyna_proto.CreateAuthResponse{
 		Token:   id,
 		Expired: uint64(now.Add(time.Hour * 8).UnixMicro()),
 	})
+	return scyna.OK
 }
 
-func createAuth(id string, apps []string, userID string) *scyna.Error {
+func createAuth(id string, apps []string, userID string) scyna.Error {
 	now := time.Now()
 	exp := now.Add(time.Hour * 8)
 

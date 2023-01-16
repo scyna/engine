@@ -1,10 +1,10 @@
 package setting
 
 import (
-	scyna "github.com/scyna/core"
+	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func UpdateDefaultConfig(config *scyna.Configuration) {
+func UpdateDefaultConfig(config *scyna_proto.Configuration) {
 	// log.Printf("Update config: %+v\n", config)
 	// manager.DefaultConfig = config
 

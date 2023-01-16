@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	scyna "github.com/scyna/core"
+	scyna_proto "github.com/scyna/core/proto/generated"
 	"github.com/scyna/go/engine/manager/manager"
 	"google.golang.org/protobuf/proto"
 )
@@ -19,7 +20,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var request scyna.CreateSessionRequest
+	var request scyna_proto.CreateSessionRequest
 	if err := proto.Unmarshal(buf, &request); err != nil {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
@@ -31,7 +32,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if sid, err := newSession(request.Context, request.Secret); err == scyna.OK {
-		var response scyna.CreateSessionResponse
+		var response scyna_proto.CreateSessionResponse
 		response.SessionID = sid
 
 		/*TODO: load config from setting*/

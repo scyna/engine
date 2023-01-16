@@ -11,7 +11,7 @@ type Client struct {
 	Secret string `db:"secret"`
 }
 
-func CreateClient(LOG scyna.Logger, client *Client) *scyna.Error {
+func CreateClient(LOG scyna.Logger, client *Client) scyna.Error {
 
 	if err := qb.Insert("scyna.client").
 		Columns("domain", "id", "secret").

@@ -7,17 +7,15 @@ import (
 	"github.com/scyna/go/engine/admin/repository"
 )
 
-func CreateContextHandler(s *scyna.Endpoint, request *proto.CreateContextRequest) {
+func CreateContextHandler(s *scyna.Endpoint, request *proto.CreateContextRequest) scyna.Error {
 	s.Logger.Info("Receive CreateContextRequest")
 
 	if err := validateCreateContextRequest(request); err != nil {
-		s.Done(scyna.REQUEST_INVALID)
-		return
+		return scyna.REQUEST_INVALID
 	}
 
 	if _, domain := repository.GetDomain(s.Logger, request.Code); domain != nil {
-		s.Error(scyna.REQUEST_INVALID)
-		return
+		return scyna.REQUEST_INVALID
 	}
 
 	context := repository.Context{
@@ -27,13 +25,12 @@ func CreateContextHandler(s *scyna.Endpoint, request *proto.CreateContextRequest
 	}
 
 	if err := repository.CreateContext(s.Logger, &context); err != nil {
-		s.Error(err)
-		return
+		return err
 	}
 
 	/*TODO: Create Stream*/
 
-	s.Done(scyna.OK)
+	return scyna.OK
 }
 
 func validateCreateContextRequest(request *proto.CreateContextRequest) error {

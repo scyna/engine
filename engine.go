@@ -7,6 +7,7 @@ import (
 	"time"
 
 	scyna "github.com/scyna/core"
+	scyna_proto "github.com/scyna/core/proto/generated"
 	"github.com/scyna/go/engine/gateway"
 	"github.com/scyna/go/engine/manager/authentication"
 	"github.com/scyna/go/engine/manager/generator"
@@ -39,7 +40,7 @@ func main() {
 	certificateKey := flag.String("certificateKey", "", "Certificate File")
 
 	flag.Parse()
-	config := scyna.Configuration{
+	config := scyna_proto.Configuration{
 		NatsUrl:      *natsUrl,
 		NatsUsername: *natsUsername,
 		NatsPassword: *natsPassword,

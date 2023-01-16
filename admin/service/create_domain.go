@@ -7,12 +7,11 @@ import (
 	"github.com/scyna/go/engine/admin/repository"
 )
 
-func CreateDomainHandler(s *scyna.Endpoint, request *proto.CreateDomainRequest) {
+func CreateDomainHandler(s *scyna.Endpoint, request *proto.CreateDomainRequest) scyna.Error {
 	s.Logger.Info("Receive CreateContextRequest")
 
 	if err := validateCreateDomainRequest(request); err != nil {
-		s.Done(scyna.REQUEST_INVALID)
-		return
+		return scyna.REQUEST_INVALID
 	}
 
 	domain := repository.Domain{
@@ -21,11 +20,10 @@ func CreateDomainHandler(s *scyna.Endpoint, request *proto.CreateDomainRequest) 
 	}
 
 	if err := repository.CreateDomain(s.Logger, &domain); err != nil {
-		s.Error(err)
-		return
+		return err
 	}
 
-	s.Done(scyna.OK)
+	return scyna.OK
 }
 
 func validateCreateDomainRequest(request *proto.CreateDomainRequest) error {

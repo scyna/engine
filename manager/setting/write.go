@@ -5,9 +5,10 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func Write(s *scyna.Endpoint, request *scyna.WriteSettingRequest) {
+func Write(s *scyna.Endpoint, request *scyna_proto.WriteSettingRequest) scyna.Error {
 	log.Println("Receive WriteSettingRequest")
 
 	if err := qb.Insert("scyna.setting").
@@ -16,14 +17,13 @@ func Write(s *scyna.Endpoint, request *scyna.WriteSettingRequest) {
 		Bind(request.Context, request.Key, request.Value).
 		ExecRelease(); err != nil {
 		s.Logger.Error("WriteSetting: " + err.Error())
-		s.Error(scyna.REQUEST_INVALID)
-		return
+		return scyna.REQUEST_INVALID
 	}
-
-	s.Done(scyna.OK)
 
 	// s.EmitSignal(scyna.SETTING_UPDATE_CHANNEL+request.Module, &scyna.SettingUpdatedSignal{
 	// 	Key:   request.Key,
 	// 	Value: request.Value,
 	// })
+
+	return scyna.OK
 }

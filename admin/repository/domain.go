@@ -10,7 +10,7 @@ type Domain struct {
 	Name string `db:"name"`
 }
 
-func GetDomain(LOG scyna.Logger, code string) (*scyna.Error, *Domain) {
+func GetDomain(LOG scyna.Logger, code string) (scyna.Error, *Domain) {
 	var domain Domain
 
 	if err := qb.Select("scyna.domain").
@@ -25,7 +25,7 @@ func GetDomain(LOG scyna.Logger, code string) (*scyna.Error, *Domain) {
 	return nil, &domain
 }
 
-func CreateDomain(LOG scyna.Logger, domain *Domain) *scyna.Error {
+func CreateDomain(LOG scyna.Logger, domain *Domain) scyna.Error {
 
 	if err := qb.Insert("scyna.domain").
 		Columns("code", "name").
