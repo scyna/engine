@@ -37,7 +37,7 @@ func Create(s *scyna.Endpoint, request *scyna_proto.CreateAuthRequest) scyna.Err
 	}
 
 	now := time.Now()
-	s.Done(&scyna_proto.CreateAuthResponse{
+	s.Response(&scyna_proto.CreateAuthResponse{
 		Token:   id,
 		Expired: uint64(now.Add(time.Hour * 8).UnixMicro()),
 	})

@@ -40,7 +40,7 @@ func StartTask(s *scyna.Endpoint, request *scyna_proto.StartTaskRequest) scyna.E
 		return scyna.REQUEST_INVALID
 	}
 
-	s.Done(&scyna_proto.StartTaskResponse{Id: taskID})
+	s.Response(&scyna_proto.StartTaskResponse{Id: taskID})
 	return scyna.OK
 }
 

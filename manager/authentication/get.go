@@ -12,7 +12,7 @@ import (
 func Get(s *scyna.Endpoint, request *scyna_proto.GetAuthRequest) scyna.Error {
 	log.Println("Receive GetAuthRequest")
 	if expired, userID := getAuthentication(request.Token, request.App); expired != nil {
-		s.Done(&scyna_proto.GetAuthResponse{
+		s.Response(&scyna_proto.GetAuthResponse{
 			Token:   request.Token,
 			UserID:  userID,
 			Expired: uint64(expired.UnixMicro()),

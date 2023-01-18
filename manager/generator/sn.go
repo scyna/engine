@@ -16,7 +16,7 @@ func GetSN(s *scyna.Endpoint, request *scyna_proto.GetSNRequest) scyna.Error {
 
 	for i := 0; i < tryCount; i++ {
 		if bucket := nextBucket(request.Key); bucket != nil {
-			s.Done(bucket)
+			s.Response(bucket)
 			return scyna.OK
 		}
 	}
