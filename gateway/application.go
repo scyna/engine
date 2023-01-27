@@ -32,7 +32,7 @@ func loadApplications() map[string]Application {
 	var apps []Application
 
 	if err := qb.Select("scyna.application").
-		Columns("code", "domain", "name").
+		Columns("code", "auth").
 		Query(scyna.DB).
 		SelectRelease(&apps); err == nil {
 		for _, c := range apps {
