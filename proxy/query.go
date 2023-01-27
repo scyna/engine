@@ -20,8 +20,8 @@ type QueryPool struct {
 func NewQuery() *Query {
 	return &Query{
 		Authenticate: qb.Select("scyna.client_use_endpoint").
-			Columns("endpoint").
-			Where(qb.Eq("client"), qb.Eq("endpoint")).
+			Columns("url").
+			Where(qb.Eq("client"), qb.Eq("url")).
 			Limit(1).
 			Query(scyna.DB),
 	}
