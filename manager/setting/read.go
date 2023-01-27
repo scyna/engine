@@ -14,10 +14,10 @@ func Read(s *scyna.Endpoint, request *scyna_proto.ReadSettingRequest) scyna.Erro
 	var value string
 	if err := qb.Select("scyna.setting").
 		Columns("value").
-		Where(qb.Eq("context"), qb.Eq("key")).
+		Where(qb.Eq("module"), qb.Eq("key")).
 		Limit(1).
 		Query(scyna.DB).
-		Bind(request.Context, request.Key).
+		Bind(request.Module, request.Key).
 		GetRelease(&value); err != nil {
 		s.Logger.Info("Can not read setting - " + err.Error())
 		return scyna.REQUEST_INVALID

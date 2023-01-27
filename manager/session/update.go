@@ -15,7 +15,7 @@ func Update(signal *scyna_proto.UpdateSessionSignal) {
 		Where(qb.Eq("id"), qb.Eq("context")).
 		Existing().
 		Query(scyna.DB).
-		Bind(time.Now(), signal.ID, signal.Context).
+		Bind(time.Now(), signal.ID, signal.Module).
 		ExecCASRelease(); !applied {
 		if err != nil {
 			log.Print("Can not update UpdateSessionSignal: ", err.Error())

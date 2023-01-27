@@ -16,7 +16,7 @@ func End(signal *scyna_proto.EndSessionSignal) {
 		Set("end", "exit_code").
 		Where(qb.Eq("id"), qb.Eq("context")).Existing().
 		Query(scyna.DB).
-		Bind(time.Now(), signal.Code, signal.ID, signal.Context).
+		Bind(time.Now(), signal.Code, signal.ID, signal.Module).
 		ExecCASRelease(); !applied {
 		if err != nil {
 			log.Print("Can not update EndSessionSignal:", err.Error())

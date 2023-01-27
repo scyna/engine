@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	CONTEXT_CODE  = "scyna.engine"
+	MODULE_CODE   = "scyna.engine"
 	MODULE_SECRET = "123456"
 )
 

@@ -2,12 +2,12 @@ DROP TABLE IF EXISTS scyna.session;
 CREATE TABLE scyna.session
 (
     id          bigint,
-    context     text,
+    module      text,
     start       timestamp,
     last_update timestamp,
     end         timestamp,
     exit_code   int, /*normal, crash, ....*/
-    PRIMARY KEY (context, id) 
+    PRIMARY KEY (module, id) 
 );
 CREATE INDEX ON scyna.session (id);
 

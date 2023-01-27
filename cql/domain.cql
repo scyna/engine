@@ -1,6 +1,6 @@
-/*context*/
-DROP TABLE IF EXISTS scyna.context;
-CREATE TABLE scyna.context
+/*module*/
+DROP TABLE IF EXISTS scyna.module;
+CREATE TABLE scyna.module
 (
     code        text PRIMARY KEY,
     secret      text,
@@ -63,8 +63,8 @@ CREATE TABLE scyna.app_has_auth
 DROP TABLE IF EXISTS scyna.setting;
 CREATE TABLE scyna.setting
 (
-    context     text,
+    module     text,
     key         text,
     value       text,
-    PRIMARY KEY (context, key)
+    PRIMARY KEY (module, key)
 );
