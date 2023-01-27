@@ -16,22 +16,22 @@ func Init(module string, secret string) {
 	}
 }
 
-func newSession(context string, secret string) (uint64, scyna.Error) {
-	log.Print("Creating session for context: ", context)
+func newSession(module string, secret string) (uint64, scyna.Error) {
+	log.Print("Creating session for module: ", module)
 	var secret_ string
-	if err := qb.Select("scyna.context").
+	if err := qb.Select("scyna.module").
 		Columns("secret").
 		Where(qb.Eq("code")).
 		Limit(1).
 		Query(scyna.DB).
-		Bind(context).
+		Bind(module).
 		GetRelease(&secret_); err != nil {
 		log.Print("Module not existed: ", err.Error())
 		return 0, scyna.MODULE_NOT_EXISTED
 	}
 
 	if secret != secret_ {
-		log.Print("Context secret is not correct")
+		log.Print("Module secret is not correct")
 		return 0, scyna.PERMISSION_ERROR
 	}
 
@@ -39,9 +39,9 @@ func newSession(context string, secret string) (uint64, scyna.Error) {
 	now := time.Now()
 
 	if err := qb.Insert("scyna.session").
-		Columns("id", "context", "start", "last_update").
+		Columns("id", "module", "start", "last_update").
 		Query(scyna.DB).
-		Bind(sid, context, now, now).
+		Bind(sid, module, now, now).
 		ExecRelease(); err != nil {
 		log.Print("Can not save session to database:", err)
 		return 0, scyna.SERVER_ERROR
