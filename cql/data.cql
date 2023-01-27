@@ -1,6 +1,6 @@
 /*core context*/
-insert into scyna.context(domain, code, name, secret) values ('scyna', 'scyna.engine', 'Scyna Engine', '123456');
-insert into scyna.context(domain, code, name, secret) values ('scyna', 'scyna.manager', 'Scyna Manager', '123456');
-insert into scyna.context(domain, code, name, secret) values ('scyna', 'scyna.test', 'Scyna Test', '123456');
+insert into scyna.context(code,secret) values ( 'scyna.engine', '123456');
+insert into scyna.context(code,secret) values ( 'scyna.manager', '123456');
+insert into scyna.context(code,secret) values ( 'scyna.test', '123456');
 
-insert into scyna.client(domain, id, secret) VALUES ('scyna', 'admin', 'admin');
+insert into scyna.client(id, secret) VALUES ('admin', 'admin');
