@@ -1,9 +1,10 @@
-go 1.18
+go 1.19
 
 use (
 	./engine
 	./core
+	./manager
 	./core/examples/hello
-	./core/examples/chat/account
-	./core/examples/chat/friend
+	./core/examples/account
+	./core/examples/customer
 )
