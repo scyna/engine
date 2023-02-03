@@ -6,6 +6,7 @@ import (
 	"github.com/nats-io/nats.go"
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_engine "github.com/scyna/core/engine"
 )
 
 type Client struct {
@@ -15,7 +16,7 @@ type Client struct {
 
 func (proxy *Proxy) initClients() {
 	proxy.Clients = proxy.loadClients()
-	_, err := scyna.Connection.Subscribe(scyna.CLIENT_UPDATE_CHANNEL, func(msg *nats.Msg) {
+	_, err := scyna.Connection.Subscribe(scyna_engine.CLIENT_UPDATE_CHANNEL, func(msg *nats.Msg) {
 		scyna.LOG.Info("Reload Clients")
 		proxy.Clients = proxy.loadClients()
 	})

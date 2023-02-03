@@ -5,10 +5,10 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
-	scyna_proto "github.com/scyna/core/proto/generated"
+	scyna_engine "github.com/scyna/core/engine"
 )
 
-func Read(s *scyna.Endpoint, request *scyna_proto.ReadSettingRequest) scyna.Error {
+func Read(s *scyna.Endpoint, request *scyna_engine.ReadSettingRequest) scyna.Error {
 	log.Println("Receive ReadSettingRequest")
 
 	var value string
@@ -23,6 +23,6 @@ func Read(s *scyna.Endpoint, request *scyna_proto.ReadSettingRequest) scyna.Erro
 		return scyna.REQUEST_INVALID
 	}
 
-	s.Response(&scyna_proto.ReadSettingResponse{Value: value})
+	s.Response(&scyna_engine.ReadSettingResponse{Value: value})
 	return scyna.OK
 }

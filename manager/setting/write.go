@@ -5,10 +5,10 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
-	scyna_proto "github.com/scyna/core/proto/generated"
+	scyna_engine "github.com/scyna/core/engine"
 )
 
-func Write(s *scyna.Endpoint, request *scyna_proto.WriteSettingRequest) scyna.Error {
+func Write(s *scyna.Endpoint, request *scyna_engine.WriteSettingRequest) scyna.Error {
 	log.Println("Receive WriteSettingRequest")
 
 	if err := qb.Insert("scyna.setting").

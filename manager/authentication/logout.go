@@ -6,10 +6,10 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
-	scyna_proto "github.com/scyna/core/proto/generated"
+	scyna_engine "github.com/scyna/core/engine"
 )
 
-func Logout(s *scyna.Endpoint, request *scyna_proto.LogoutRequest) scyna.Error {
+func Logout(s *scyna.Endpoint, request *scyna_engine.LogoutRequest) scyna.Error {
 	log.Println("Receive LogoutRequest")
 
 	if !checkOrg(request.Organization, request.Secret) {

@@ -6,12 +6,12 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
-	scyna_proto "github.com/scyna/core/proto/generated"
+	scyna_engine "github.com/scyna/core/engine"
 )
 
 const snPartitionSize = 500
 
-func GetSN(s *scyna.Endpoint, request *scyna_proto.GetSNRequest) scyna.Error {
+func GetSN(s *scyna.Endpoint, request *scyna_engine.GetSNRequest) scyna.Error {
 	log.Print("Receive GetSNRequest")
 
 	for i := 0; i < tryCount; i++ {
@@ -24,7 +24,7 @@ func GetSN(s *scyna.Endpoint, request *scyna_proto.GetSNRequest) scyna.Error {
 	return scyna.SERVER_ERROR
 }
 
-func nextBucket(key string) *scyna_proto.GetSNResponse {
+func nextBucket(key string) *scyna_engine.GetSNResponse {
 	prefix := time.Now().Unix() / (60 * 60 * 24)
 	seed := 0
 	if err := qb.Select("scyna.gen_sn").
@@ -45,7 +45,7 @@ func nextBucket(key string) *scyna_proto.GetSNResponse {
 		Query(scyna.DB).
 		Bind(key, prefix, seed).
 		ExecCASRelease(); applied {
-		return &scyna_proto.GetSNResponse{
+		return &scyna_engine.GetSNResponse{
 			Prefix: uint32(prefix),
 			Start:  uint64(seed) + 1,
 			End:    uint64(seed) + snPartitionSize,

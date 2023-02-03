@@ -1,7 +1,7 @@
 package manager
 
 import (
-	scyna_proto "github.com/scyna/core/proto/generated"
+	scyna_engine "github.com/scyna/core/engine"
 )
 
 const (
@@ -9,7 +9,7 @@ const (
 	MODULE_SECRET = "123456"
 )
 
-var DefaultConfig *scyna_proto.Configuration = &scyna_proto.Configuration{
+var DefaultConfig *scyna_engine.Configuration = &scyna_engine.Configuration{
 	NatsUrl:      "127.0.0.1",
 	NatsUsername: "",
 	NatsPassword: "",

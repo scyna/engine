@@ -6,7 +6,7 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
-	scyna_proto "github.com/scyna/core/proto/generated"
+	scyna_engine "github.com/scyna/core/engine"
 )
 
 const idPartitionSize = 1000
@@ -26,7 +26,7 @@ func GetID(s *scyna.Endpoint) scyna.Error {
 	log.Print("Receive GetIDRequest")
 	for i := 0; i < tryCount; i++ {
 		if ok, prefix, start, end := allocate(); ok {
-			s.Response(&scyna_proto.GetIDResponse{
+			s.Response(&scyna_engine.GetIDResponse{
 				Prefix: prefix,
 				Start:  start,
 				End:    end,

@@ -7,6 +7,7 @@ import (
 	"github.com/nats-io/nats.go"
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_engine "github.com/scyna/core/engine"
 )
 
 type Application struct {
@@ -18,7 +19,7 @@ type Application struct {
 
 func (g *Gateway) initApplications() {
 	g.Applications = loadApplications()
-	_, err := scyna.Connection.Subscribe(scyna.APP_UPDATE_CHANNEL, func(msg *nats.Msg) {
+	_, err := scyna.Connection.Subscribe(scyna_engine.APP_UPDATE_CHANNEL, func(msg *nats.Msg) {
 		scyna.LOG.Info("Reload Application")
 		g.Applications = loadApplications()
 	})
