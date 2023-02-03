@@ -8,11 +8,12 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
-	scyna_engine "github.com/scyna/core/engine"
+
+	scyna_proto "github.com/scyna/core/proto/generated"
 	scyna_utils "github.com/scyna/core/utils"
 )
 
-func TraceCreated(signal *scyna_engine.TraceCreatedSignal) {
+func TraceCreated(signal *scyna_proto.TraceCreatedSignal) {
 	day := scyna_utils.GetDayByTime(time.Now())
 	var source *string = nil
 	if len(signal.Source) > 0 {

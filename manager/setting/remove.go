@@ -3,10 +3,10 @@ package setting
 import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
-	scyna_engine "github.com/scyna/core/engine"
+	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func Remove(s *scyna.Endpoint, request *scyna_engine.RemoveSettingRequest) scyna.Error {
+func Remove(s *scyna.Endpoint, request *scyna_proto.RemoveSettingRequest) scyna.Error {
 	if err := qb.Delete("scyna.setting").
 		Where(qb.Eq("module"), qb.Eq("key")).
 		Query(scyna.DB).

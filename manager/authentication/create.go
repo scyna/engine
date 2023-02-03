@@ -7,12 +7,12 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
-	scyna_engine "github.com/scyna/core/engine"
+	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
 var serialNumber = scyna.InitSerialNumber("scyna.auth")
 
-func Create(s *scyna.Endpoint, request *scyna_engine.CreateAuthRequest) scyna.Error {
+func Create(s *scyna.Endpoint, request *scyna_proto.CreateAuthRequest) scyna.Error {
 	log.Println("Receive CreateAuthRequest")
 
 	if !checkOrg(request.Organization, request.Secret) {
@@ -37,7 +37,7 @@ func Create(s *scyna.Endpoint, request *scyna_engine.CreateAuthRequest) scyna.Er
 	}
 
 	now := time.Now()
-	s.Response(&scyna_engine.CreateAuthResponse{
+	s.Response(&scyna_proto.CreateAuthResponse{
 		Token:   id,
 		Expired: uint64(now.Add(time.Hour * 8).UnixMicro()),
 	})

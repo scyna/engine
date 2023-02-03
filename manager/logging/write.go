@@ -4,10 +4,10 @@ import (
 	"log"
 
 	scyna "github.com/scyna/core"
-	scyna_engine "github.com/scyna/core/engine"
+	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func Write(signal *scyna_engine.LogCreatedSignal) {
+func Write(signal *scyna_proto.LogCreatedSignal) {
 	log.Print(signal.Text)
 	scyna.AddLog(scyna.LogData{
 		ID:       signal.ID,
