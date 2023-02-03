@@ -10,7 +10,7 @@ import (
 
 func Init(module string, secret string) {
 	if id, err := newSession(module, secret); err != scyna.OK {
-		scyna.Fatal("Error in create session")
+		panic("Error in create session")
 	} else {
 		scyna.Session = scyna.NewSession(id)
 	}

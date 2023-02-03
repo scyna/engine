@@ -138,11 +138,11 @@ func main() {
 	log.Println("Scyna Manager Start with port " + *managerPort)
 	if *certificateEnable && *certificateFile != "" {
 		if err := http.ListenAndServeTLS(":"+*managerPort, *certificateFile, *certificateKey, nil); err != nil {
-			scyna.Fatal(err)
+			panic(err)
 		}
 	} else {
 		if err := http.ListenAndServe(":"+*managerPort, nil); err != nil {
-			scyna.Fatal(err)
+			panic(err)
 		}
 	}
 }

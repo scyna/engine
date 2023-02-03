@@ -19,7 +19,7 @@ func Init() {
 			return
 		}
 	}
-	scyna.Fatal("Can not init id generator")
+	panic("Can not init id generator")
 }
 
 func GetID(s *scyna.Endpoint) scyna.Error {

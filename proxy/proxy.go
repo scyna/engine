@@ -9,6 +9,7 @@ import (
 
 	scyna "github.com/scyna/core"
 	scyna_engine "github.com/scyna/core/engine"
+	scyna_utils "github.com/scyna/core/utils"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -118,7 +119,7 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	/*post request to message queue*/
-	msg, respErr := scyna.Connection.Request(scyna.PublishURL(url), reqBytes, 10*time.Second)
+	msg, respErr := scyna.Connection.Request(scyna_utils.PublishURL(url), reqBytes, 10*time.Second)
 	if respErr != nil {
 		http.Error(rw, "No response", http.StatusInternalServerError)
 		trace.Status = http.StatusInternalServerError
