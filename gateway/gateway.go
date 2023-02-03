@@ -7,19 +7,20 @@ import (
 	"time"
 
 	scyna "github.com/scyna/core"
+	scyna_engine "github.com/scyna/core/engine"
 	"google.golang.org/protobuf/proto"
 )
 
 type Gateway struct {
 	Queries      QueryPool
 	Applications map[string]Application
-	Contexts     scyna.HttpContextPool
+	Contexts     scyna_engine.HttpContextPool
 }
 
 func NewGateway() *Gateway {
 	ret := &Gateway{
 		Queries:  NewQueryPool(),
-		Contexts: scyna.NewContextPool(),
+		Contexts: scyna_engine.NewContextPool(),
 	}
 	ret.initApplications()
 	return ret

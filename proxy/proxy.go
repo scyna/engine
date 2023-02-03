@@ -8,19 +8,20 @@ import (
 	"time"
 
 	scyna "github.com/scyna/core"
+	scyna_engine "github.com/scyna/core/engine"
 	"google.golang.org/protobuf/proto"
 )
 
 type Proxy struct {
 	Queries  QueryPool
 	Clients  map[string]Client
-	Contexts scyna.HttpContextPool
+	Contexts scyna_engine.HttpContextPool
 }
 
 func NewProxy() *Proxy {
 	ret := &Proxy{
 		Queries:  NewQueryPool(),
-		Contexts: scyna.NewContextPool(),
+		Contexts: scyna_engine.NewContextPool(),
 	}
 	ret.initClients()
 	return ret
