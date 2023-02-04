@@ -20,7 +20,7 @@ import (
 	"github.com/scyna/go/engine/proxy"
 )
 
-const MODULE_CODE = "scyna.engine"
+const MODULE_CODE = "scyna_engine"
 
 func main() {
 	managerPort := flag.String("manager_port", "8081", "Manager Port")
