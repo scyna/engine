@@ -4,7 +4,4 @@ use (
 	./engine
 	./core
 	./manager
-	./core/examples/hello
-	./core/examples/account
-	./core/examples/customer
 )
