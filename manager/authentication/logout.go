@@ -12,14 +12,10 @@ import (
 func Logout(s *scyna.Endpoint, request *scyna_proto.LogoutRequest) scyna.Error {
 	log.Println("Receive LogoutRequest")
 
-	if !checkOrg(request.Organization, request.Secret) {
-		s.Logger.Warning("Organization not exist")
-		return scyna.REQUEST_INVALID
-	}
-
 	if err := updateSession(request.Token, request.UserID); err != scyna.OK {
 		return err
 	}
+
 	return scyna.OK
 }
 

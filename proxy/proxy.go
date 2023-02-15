@@ -74,13 +74,6 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// if client.State != uint32(scyna.ClientState_ACTIVE) {
-	// 	http.Error(rw, "Unauthorized", http.StatusUnauthorized)
-	// 	log.Printf("Client is inactive: %s\n", clientID)
-	// 	proxy.SaveErrorCall(clientID, 401, callID, day, start, req.URL.Path)
-	// 	return
-	// }
-
 	if err := query.Authenticate.Bind(clientID, url).Get(&url); err != nil {
 		http.Error(rw, "Unauthorized", http.StatusUnauthorized)
 		scyna.LOG.Info(fmt.Sprintf("Wrong url: %s, error = %s\n", url, err.Error()))
@@ -107,7 +100,6 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 	trace.RequestBody = string(ctx.Request.Body)
 	ctx.Request.TraceID = callID
-	//ctx.Request.Data = client.Type
 
 	/*serialize the request */
 	reqBytes, err := proto.Marshal(&ctx.Request)

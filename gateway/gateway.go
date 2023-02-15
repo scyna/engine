@@ -28,7 +28,7 @@ func NewGateway() *Gateway {
 
 func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	var app Application
-	callID := scyna.ID.Next()
+	traceID := scyna.ID.Next()
 
 	auth := false
 	ok, appID, json, url := parseUrl(req.URL.String())
@@ -41,19 +41,19 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 	log.Print(url)
 
-	query := gateway.Queries.GetQuery()
-	defer gateway.Queries.Put(query)
+	// query := gateway.Queries.GetQuery()
+	// defer gateway.Queries.Put(query)
 
 	ctx := gateway.Contexts.GetContext()
 	defer gateway.Contexts.PutContext(ctx)
 
 	trace := scyna.Trace{
-		ID:       callID,
+		ID:       traceID,
 		ParentID: 0,
 		Time:     time.Now(),
 		Path:     url,
 		Type:     scyna.TRACE_ENDPOINT,
-		Source:   app.Code,
+		Source:   appID,
 	}
 	defer trace.Save()
 
@@ -69,7 +69,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	ctx.Request.JSON = json
-	ctx.Request.TraceID = callID
+	ctx.Request.TraceID = traceID
 
 	if a, ok := gateway.Applications[appID]; !ok {
 		http.Error(rw, "Forbidden", http.StatusForbidden)

@@ -1,15 +1,14 @@
 package trace
 
 import (
-	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/gocql/gocql"
 	scyna "github.com/scyna/core"
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
 func ServiceDone(signal *scyna_proto.EndpointDoneSignal) {
-	qb.Insert("scyna.tag").
-		Columns("trace_id", "key", "value").
-		Query(scyna.DB).
-		Bind(signal.TraceID, "response", signal.Response).
-		ExecRelease()
+	batch := scyna.DB.NewBatch(gocql.UnloggedBatch)
+	batch.Query("INSERT INTO scyna.tag(trace_id, key, value) VALUES(?,?,?)", signal.TraceID, "request", signal.Request)
+	batch.Query("INSERT INTO scyna.tag(trace_id, key, value) VALUES(?,?,?)", signal.TraceID, "response", signal.Response)
+	scyna.DB.ExecuteBatch(batch)
 }

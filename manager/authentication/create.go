@@ -15,11 +15,6 @@ var serialNumber = scyna.InitSerialNumber("scyna.auth")
 func Create(s *scyna.Endpoint, request *scyna_proto.CreateAuthRequest) scyna.Error {
 	log.Println("Receive CreateAuthRequest")
 
-	if !checkOrg(request.Organization, request.Secret) {
-		s.Logger.Warning("Organization not exist")
-		return scyna.REQUEST_INVALID
-	}
-
 	if len(request.Apps) == 0 {
 		return scyna.REQUEST_INVALID
 	}
@@ -61,26 +56,6 @@ func createAuth(id string, apps []string, userID string) scyna.Error {
 		return scyna.SERVER_ERROR
 	}
 	return scyna.OK
-}
-
-func checkOrg(code string, secret string) bool {
-
-	var secret_ string
-	if err := qb.Select("scyna.domain").
-		Columns("password"). //FIXME: change to use secret
-		Where(qb.Eq("code")).
-		Query(scyna.DB).
-		Bind(code).
-		GetRelease(&secret_); err != nil {
-		log.Println("Check OrgCode", err.Error())
-		return false
-	}
-
-	if secret != secret_ {
-		return false
-	}
-
-	return true
 }
 
 func checkApp(code string) bool {

@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS scyna.application;
 CREATE TABLE scyna.application
 (
     code        text PRIMARY KEY,
-    auth        text,
+    auth_url    text,
 );
 
 /*relations*/
@@ -47,16 +47,6 @@ CREATE TABLE scyna.authentication
     expired timestamp,
     apps    list<text>,
     uid     text,
-    data    blob,
-);
-
-DROP TABLE IF EXISTS scyna.app_has_auth;
-CREATE TABLE scyna.app_has_auth
-(
-    application     text,
-    authentication  text,
-    uid             text,
-    PRIMARY KEY ( (application, uid), authentication )
 );
 
 /*setting*/
