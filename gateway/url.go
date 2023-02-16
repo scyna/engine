@@ -23,9 +23,11 @@ func parseUrl(path string) (ok bool, app string, json bool, auth bool, url strin
 		return
 	}
 
-	url = "/" + app
-	for i := 3; i < len(list); i++ {
+	url = "/" + list[3]
+	for i := 4; i < len(list); i++ {
 		url += "/" + list[i]
 	}
+
+	auth = (url == "/auth")
 	return
 }
