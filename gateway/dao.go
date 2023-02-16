@@ -19,7 +19,7 @@ func updateSession(token string, exp time.Time) bool {
 	return err == nil
 }
 
-func checkService(token string, app string, url string) *time.Time {
+func checkAuthentication(token string, app string, url string) *time.Time {
 	/*check authentication*/
 	var auth struct {
 		Expired time.Time `db:"expired"`

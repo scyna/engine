@@ -49,6 +49,16 @@ CREATE TABLE scyna.authentication
     uid     text,
 );
 
+DROP TABLE IF EXISTS scyna.app_has_auth;
+CREATE TABLE scyna.app_has_auth
+(
+    app     text,
+    auth    text,
+    uid     text,
+    PRIMARY KEY (app, auth)
+);
+
+
 /*setting*/
 DROP TABLE IF EXISTS scyna.setting;
 CREATE TABLE scyna.setting

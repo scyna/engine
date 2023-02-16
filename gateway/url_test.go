@@ -4,7 +4,7 @@ import "testing"
 
 func TestParseUrl(t *testing.T) {
 	path := "/iot.product/p/iot/product/auth"
-	ok, app, json, url := parseUrl(path)
+	ok, app, json, _, url := parseUrl(path)
 
 	if !ok {
 		t.Error("Not ok")

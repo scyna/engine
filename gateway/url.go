@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-func parseUrl(path string) (ok bool, app string, json bool, url string) {
+func parseUrl(path string) (ok bool, app string, json bool, auth bool, url string) {
 	list := strings.Split(path, "/")
 	ok = true
 
@@ -23,8 +23,8 @@ func parseUrl(path string) (ok bool, app string, json bool, url string) {
 		return
 	}
 
-	url = "/" + list[3]
-	for i := 4; i < len(list); i++ {
+	url = "/" + app
+	for i := 3; i < len(list); i++ {
 		url += "/" + list[i]
 	}
 	return

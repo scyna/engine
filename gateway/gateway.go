@@ -12,14 +12,12 @@ import (
 )
 
 type Gateway struct {
-	Queries      QueryPool
 	Applications map[string]Application
 	Contexts     scyna_utils.HttpContextPool
 }
 
 func NewGateway() *Gateway {
 	ret := &Gateway{
-		Queries:  NewQueryPool(),
 		Contexts: scyna_utils.NewContextPool(),
 	}
 	ret.initApplications()
@@ -30,8 +28,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	var app Application
 	traceID := scyna.ID.Next()
 
-	auth := false
-	ok, appID, json, url := parseUrl(req.URL.String())
+	ok, appID, json, auth, url := parseUrl(req.URL.String())
 
 	if !ok {
 		log.Print("Path not ok")
@@ -40,9 +37,6 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	log.Print(url)
-
-	// query := gateway.Queries.GetQuery()
-	// defer gateway.Queries.Put(query)
 
 	ctx := gateway.Contexts.GetContext()
 	defer gateway.Contexts.PutContext(ctx)
@@ -80,38 +74,38 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		app = a
 	}
 
-	if url == "/auth" {
-		auth = true
+	if auth {
 		url = app.AuthURL
 		log.Print(url)
 	} else {
 		if cookie, err := req.Cookie("session"); err == nil {
 			token := cookie.Value
 			ctx.Request.Data = token
-			if exp := checkService(token, appID, url); exp == nil {
+			exp := checkAuthentication(token, appID, url)
+			if exp == nil {
 				http.Error(rw, "Unauthorized", http.StatusUnauthorized)
 				trace.SessionID = scyna.Session.ID()
 				trace.Status = http.StatusUnauthorized
 				return
+			}
+
+			now := time.Now()
+			if exp.Before(now) {
+				http.Error(rw, "Unauthorized", http.StatusUnauthorized)
+				scyna.LOG.Info("Session expired")
+				trace.SessionID = scyna.Session.ID()
+				trace.Status = http.StatusUnauthorized
+				return
 			} else {
-				//log.Print(exp)
-				now := time.Now()
-				if exp.Before(now) {
-					http.Error(rw, "Unauthorized", http.StatusUnauthorized)
-					scyna.LOG.Info("Session expired")
-					trace.SessionID = scyna.Session.ID()
-					trace.Status = http.StatusUnauthorized
-					return
-				} else {
-					if exp.After(now.Add(time.Minute * 10)) {
-						/*auto extend expire*/
-						if updateSession(token, now.Add(time.Hour*8)) {
-							cookie.Expires = now
-							http.SetCookie(rw, cookie)
-						}
+				if exp.After(now.Add(time.Minute * 10)) {
+					/*auto extend expire*/
+					if updateSession(token, now.Add(time.Hour*8)) {
+						cookie.Expires = now
+						http.SetCookie(rw, cookie)
 					}
 				}
 			}
+
 		} else {
 			http.Error(rw, "Unauthorized", http.StatusUnauthorized)
 			scyna.LOG.Info("Can not get cookie")
@@ -139,14 +133,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	/*post request to message queue*/
-	var _url string
-	if url != app.AuthURL {
-		_url = "/" + appID + url
-	} else {
-		_url = url
-	}
-	msg, respErr := scyna.Connection.Request(scyna_utils.PublishURL(_url), reqBytes, 10*time.Second)
+	msg, respErr := scyna.Connection.Request(scyna_utils.PublishURL(url), reqBytes, 10*time.Second)
 	if respErr != nil {
 		http.Error(rw, "No response", http.StatusInternalServerError)
 		scyna.LOG.Error("ServeHTTP: Nats: " + respErr.Error())

@@ -27,7 +27,7 @@ func Create(s *scyna.Endpoint, request *scyna_proto.CreateAuthRequest) scyna.Err
 	}
 
 	id := serialNumber.Next()
-	if err := createAuth(id, request.Apps, request.UserID); err != scyna.OK {
+	if err := createAuth(id, request.Apps, request.UID); err != scyna.OK {
 		return err
 	}
 
@@ -48,8 +48,8 @@ func createAuth(id string, apps []string, userID string) scyna.Error {
 	batch.Query("INSERT INTO scyna.authentication (id, apps, expired, time, uid) VALUES (?,?,?,?,?);",
 		id, apps, exp, now, userID)
 	for _, app := range apps {
-		batch.Query("INSERT INTO scyna.app_has_auth (auth_id, app_code, user_id) VALUES (?,?,?);",
-			id, app, userID)
+		batch.Query("INSERT INTO scyna.app_has_auth (app, auth, uid) VALUES (?,?,?);",
+			app, id, userID)
 	}
 	if err := session.ExecuteBatch(batch); err != nil {
 		log.Print("Error:", err)
