@@ -26,13 +26,11 @@ func GetID(s *scyna.Endpoint) scyna.Error {
 	log.Print("Receive GetIDRequest")
 	for i := 0; i < tryCount; i++ {
 		if ok, prefix, start, end := allocate(); ok {
-			s.Response(&scyna_proto.GetIDResponse{
+			return s.OK(&scyna_proto.GetIDResponse{
 				Prefix: prefix,
 				Start:  start,
 				End:    end,
 			})
-			log.Print("Return GetIDResponse")
-			return scyna.OK
 		}
 	}
 	return scyna.SERVER_ERROR

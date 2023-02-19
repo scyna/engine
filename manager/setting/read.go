@@ -23,6 +23,5 @@ func Read(s *scyna.Endpoint, request *scyna_proto.ReadSettingRequest) scyna.Erro
 		return scyna.REQUEST_INVALID
 	}
 
-	s.Response(&scyna_proto.ReadSettingResponse{Value: value})
-	return scyna.OK
+	return s.OK(&scyna_proto.ReadSettingResponse{Value: value})
 }

@@ -12,7 +12,7 @@ import (
 func Get(s *scyna.Endpoint, request *scyna_proto.GetAuthRequest) scyna.Error {
 	log.Println("Receive GetAuthRequest")
 	if expired, userID := getAuthentication(request.Token, request.App); expired != nil {
-		s.Response(&scyna_proto.GetAuthResponse{
+		return s.OK(&scyna_proto.GetAuthResponse{
 			Token:   request.Token,
 			UserID:  userID,
 			Expired: uint64(expired.UnixMicro()),
@@ -21,7 +21,6 @@ func Get(s *scyna.Endpoint, request *scyna_proto.GetAuthRequest) scyna.Error {
 		s.Logger.Warning("Not exists Token, App")
 		return scyna.REQUEST_INVALID
 	}
-	return scyna.OK
 }
 
 func getAuthentication(token string, app string) (*time.Time, string) {

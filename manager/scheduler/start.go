@@ -40,8 +40,7 @@ func StartTask(s *scyna.Endpoint, request *scyna_proto.StartTaskRequest) scyna.E
 		return scyna.REQUEST_INVALID
 	}
 
-	s.Response(&scyna_proto.StartTaskResponse{Id: taskID})
-	return scyna.OK
+	return s.OK(&scyna_proto.StartTaskResponse{Id: taskID})
 }
 
 func validateStartTaskRequest(request *scyna_proto.StartTaskRequest) error {
