@@ -8,7 +8,7 @@ import (
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func Read(s *scyna.Endpoint, request *scyna_proto.ReadSettingRequest) scyna.Error {
+func Read(s *scyna.Context, request *scyna_proto.ReadSettingRequest) scyna.Error {
 	log.Println("Receive ReadSettingRequest")
 
 	var value string

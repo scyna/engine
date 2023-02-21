@@ -8,7 +8,7 @@ import (
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func Write(s *scyna.Endpoint, request *scyna_proto.WriteSettingRequest) scyna.Error {
+func Write(s *scyna.Context, request *scyna_proto.WriteSettingRequest) scyna.Error {
 	log.Println("Receive WriteSettingRequest")
 
 	if err := qb.Insert("scyna.setting").

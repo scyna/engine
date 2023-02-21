@@ -9,7 +9,7 @@ import (
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func Logout(s *scyna.Endpoint, request *scyna_proto.LogoutRequest) scyna.Error {
+func Logout(s *scyna.Context, request *scyna_proto.LogoutRequest) scyna.Error {
 	log.Println("Receive LogoutRequest")
 
 	if err := updateSession(request.Token, request.UserID); err != scyna.OK {

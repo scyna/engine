@@ -9,7 +9,7 @@ import (
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func Get(s *scyna.Endpoint, request *scyna_proto.GetAuthRequest) scyna.Error {
+func Get(s *scyna.Context, request *scyna_proto.GetAuthRequest) scyna.Error {
 	log.Println("Receive GetAuthRequest")
 	if expired, userID := getAuthentication(request.Token, request.App); expired != nil {
 		return s.OK(&scyna_proto.GetAuthResponse{
