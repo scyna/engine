@@ -92,7 +92,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 			now := time.Now()
 			if exp.Before(now) {
 				http.Error(rw, "Unauthorized", http.StatusUnauthorized)
-				scyna.LOG.Info("Session expired")
+				scyna.Session.Info("Session expired")
 				trace.SessionID = scyna.Session.ID()
 				trace.Status = http.StatusUnauthorized
 				return
@@ -108,7 +108,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 		} else {
 			http.Error(rw, "Unauthorized", http.StatusUnauthorized)
-			scyna.LOG.Info("Can not get cookie")
+			scyna.Session.Info("Can not get cookie")
 			trace.SessionID = scyna.Session.ID()
 			trace.Status = http.StatusUnauthorized
 			return
@@ -136,7 +136,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	msg, respErr := scyna.Connection.Request(scyna_utils.PublishURL(url), reqBytes, 10*time.Second)
 	if respErr != nil {
 		http.Error(rw, "No response", http.StatusInternalServerError)
-		scyna.LOG.Error("ServeHTTP: Nats: " + respErr.Error())
+		scyna.Session.Error("ServeHTTP: Nats: " + respErr.Error())
 		trace.SessionID = scyna.Session.ID()
 		trace.Status = http.StatusInternalServerError
 		return
@@ -146,7 +146,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	if err := proto.Unmarshal(msg.Data, &ctx.Response); err != nil {
 		log.Println()
 		http.Error(rw, "Cannot deserialize response", http.StatusInternalServerError)
-		scyna.LOG.Error("nats-proxy:" + err.Error())
+		scyna.Session.Error("nats-proxy:" + err.Error())
 		trace.SessionID = scyna.Session.ID()
 		trace.Status = http.StatusInternalServerError
 		return
@@ -185,7 +185,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	trace.Status = ctx.Response.Code
 	_, err = bytes.NewBuffer(ctx.Response.Body).WriteTo(rw)
 	if err != nil {
-		scyna.LOG.Error("Proxy write data error: " + err.Error())
+		scyna.Session.Error("Proxy write data error: " + err.Error())
 		trace.SessionID = scyna.Session.ID()
 		trace.Status = 0
 	}

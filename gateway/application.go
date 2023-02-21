@@ -18,7 +18,7 @@ type Application struct {
 func (g *Gateway) initApplications() {
 	g.Applications = loadApplications()
 	_, err := scyna.Connection.Subscribe(scyna_proto.APP_UPDATE_CHANNEL, func(msg *nats.Msg) {
-		scyna.LOG.Info("Reload Application")
+		scyna.Session.Info("Reload Application")
 		g.Applications = loadApplications()
 	})
 	if err != nil {
@@ -39,7 +39,7 @@ func loadApplications() map[string]Application {
 			ret[c.Code] = c
 		}
 	} else {
-		scyna.LOG.Error("Load Clients fail: " + err.Error())
+		scyna.Session.Error("Load Clients fail: " + err.Error())
 	}
 	return ret
 }

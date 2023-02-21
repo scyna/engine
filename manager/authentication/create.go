@@ -21,7 +21,7 @@ func Create(s *scyna.Endpoint, request *scyna_proto.CreateAuthRequest) scyna.Err
 
 	for _, app := range request.Apps {
 		if !checkApp(app) {
-			scyna.LOG.Warning("App not exist: " + app)
+			scyna.Session.Warning("App not exist: " + app)
 			return scyna.REQUEST_INVALID
 		}
 	}

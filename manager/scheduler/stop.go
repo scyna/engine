@@ -14,7 +14,7 @@ func StopTask(s *scyna.Endpoint, request *scyna_proto.StopTaskRequest) scyna.Err
 		Query(scyna.DB).
 		Bind(true, request.Id).
 		ExecRelease(); err != nil {
-		s.Logger.Error(err.Error())
+		s.Error(err.Error())
 		return scyna.REQUEST_INVALID
 	}
 

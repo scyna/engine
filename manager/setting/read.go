@@ -19,7 +19,7 @@ func Read(s *scyna.Endpoint, request *scyna_proto.ReadSettingRequest) scyna.Erro
 		Query(scyna.DB).
 		Bind(request.Module, request.Key).
 		GetRelease(&value); err != nil {
-		s.Logger.Info("Can not read setting - " + err.Error())
+		s.Info("Can not read setting - " + err.Error())
 		return scyna.REQUEST_INVALID
 	}
 

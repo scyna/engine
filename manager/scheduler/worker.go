@@ -84,7 +84,7 @@ func (w *worker) process(bucket int64, id int64) {
 			Query(scyna.DB).
 			Bind(bucket, id).
 			ExecRelease(); err != nil {
-			scyna.LOG.Error(err.Error())
+			scyna.Session.Error(err.Error())
 		}
 		return
 	}
@@ -105,6 +105,6 @@ func (w *worker) process(bucket int64, id int64) {
 	}
 
 	if err := scyna.DB.ExecuteBatch(qBatch); err != nil {
-		scyna.LOG.Error(err.Error())
+		scyna.Session.Error(err.Error())
 	}
 }

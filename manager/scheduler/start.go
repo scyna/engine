@@ -13,7 +13,7 @@ import (
 
 func StartTask(s *scyna.Endpoint, request *scyna_proto.StartTaskRequest) scyna.Error {
 	if err := validateStartTaskRequest(request); err != nil {
-		s.Logger.Error(err.Error())
+		s.Error(err.Error())
 		return scyna.REQUEST_INVALID
 	}
 
@@ -36,7 +36,7 @@ func StartTask(s *scyna.Endpoint, request *scyna_proto.StartTaskRequest) scyna.E
 	bucket := GetBucket(start) // Generate period id
 	qBatch.Query("INSERT INTO scyna.todo(bucket, task_id) VALUES (?, ?);", bucket, taskID)
 	if err := scyna.DB.ExecuteBatch(qBatch); err != nil {
-		s.Logger.Error(err.Error())
+		s.Error(err.Error())
 		return scyna.REQUEST_INVALID
 	}
 

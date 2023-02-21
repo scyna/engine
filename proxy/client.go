@@ -17,7 +17,7 @@ type Client struct {
 func (proxy *Proxy) initClients() {
 	proxy.Clients = proxy.loadClients()
 	_, err := scyna.Connection.Subscribe(scyna_proto.CLIENT_UPDATE_CHANNEL, func(msg *nats.Msg) {
-		scyna.LOG.Info("Reload Clients")
+		scyna.Session.Info("Reload Clients")
 		proxy.Clients = proxy.loadClients()
 	})
 	if err != nil {
@@ -37,7 +37,7 @@ func (proxy *Proxy) loadClients() map[string]Client {
 			ret[c.ID] = c
 		}
 	} else {
-		scyna.LOG.Error("Load Clients fail: " + err.Error())
+		scyna.Session.Error("Load Clients fail: " + err.Error())
 	}
 	return ret
 }
