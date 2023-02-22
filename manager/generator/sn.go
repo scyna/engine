@@ -11,7 +11,7 @@ import (
 
 const snPartitionSize = 500
 
-func GetSN(s *scyna.Context, request *scyna_proto.GetSNRequest) scyna.Error {
+func GetSN(s scyna.Context, request *scyna_proto.GetSNRequest) scyna.Error {
 	log.Print("Receive GetSNRequest")
 
 	for i := 0; i < tryCount; i++ {

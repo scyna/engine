@@ -22,7 +22,7 @@ func Init() {
 	panic("Can not init id generator")
 }
 
-func GetID(s *scyna.Context) scyna.Error {
+func GetID(s scyna.Context) scyna.Error {
 	log.Print("Receive GetIDRequest")
 	for i := 0; i < tryCount; i++ {
 		if ok, prefix, start, end := allocate(); ok {

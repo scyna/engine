@@ -11,7 +11,7 @@ import (
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func StartTask(s *scyna.Context, request *scyna_proto.StartTaskRequest) scyna.Error {
+func StartTask(s scyna.Context, request *scyna_proto.StartTaskRequest) scyna.Error {
 	if err := validateStartTaskRequest(request); err != nil {
 		s.Error(err.Error())
 		return scyna.REQUEST_INVALID

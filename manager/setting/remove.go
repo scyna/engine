@@ -6,7 +6,7 @@ import (
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func Remove(s *scyna.Context, request *scyna_proto.RemoveSettingRequest) scyna.Error {
+func Remove(s scyna.Context, request *scyna_proto.RemoveSettingRequest) scyna.Error {
 	if err := qb.Delete("scyna.setting").
 		Where(qb.Eq("module"), qb.Eq("key")).
 		Query(scyna.DB).

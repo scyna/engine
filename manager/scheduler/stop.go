@@ -6,7 +6,7 @@ import (
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func StopTask(s *scyna.Context, request *scyna_proto.StopTaskRequest) scyna.Error {
+func StopTask(s scyna.Context, request *scyna_proto.StopTaskRequest) scyna.Error {
 
 	if err := qb.Update("scyna.task").
 		Set("done").
