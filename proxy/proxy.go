@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
 	scyna_utils "github.com/scyna/core/utils"
 	"google.golang.org/protobuf/proto"
@@ -62,8 +63,9 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 	defer trace.Save()
 
-	query := proxy.Queries.GetQuery()
-	defer proxy.Queries.Put(query)
+	// query := proxy.Queries.GetQuery()
+	// defer proxy.Queries.Put(query)
+
 	ctx := proxy.Contexts.GetContext()
 	defer proxy.Contexts.PutContext(ctx)
 
@@ -74,7 +76,13 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if err := query.Authenticate.Bind(clientID, url).Get(&url); err != nil {
+	if err := qb.Select("scyna.client_use_endpoint").
+		Columns("url").
+		Where(qb.Eq("client"), qb.Eq("url")).
+		Limit(1).
+		Query(scyna.DB).
+		Bind(clientID, url).
+		GetRelease(&url); err != nil {
 		http.Error(rw, "Unauthorized", http.StatusUnauthorized)
 		scyna.Session.Info(fmt.Sprintf("Wrong url: %s, error = %s\n", url, err.Error()))
 		trace.Status = http.StatusUnauthorized
