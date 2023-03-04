@@ -71,7 +71,7 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 	if !ok || clientSecret != client.Secret {
 		http.Error(rw, "Unauthorized", http.StatusUnauthorized)
-		scyna.Session.Info("Wrong client id or secret: " + clientID)
+		scyna.Session.Info("Wrong client id or secret: " + clientID + ", secret:" + clientSecret)
 		trace.Status = http.StatusUnauthorized
 		return
 	}
@@ -118,7 +118,8 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	/*post request to message queue*/
-	msg, respErr := scyna.Connection.Request(scyna_utils.PublishURL(url), reqBytes, 10*time.Second)
+	scyna.Session.Info("Here")
+	msg, respErr := scyna.Connection.Request(scyna_utils.PublishURL(url), reqBytes, 60*time.Second)
 	if respErr != nil {
 		http.Error(rw, "No response", http.StatusInternalServerError)
 		trace.Status = http.StatusInternalServerError
