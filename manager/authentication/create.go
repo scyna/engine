@@ -12,7 +12,7 @@ import (
 
 var serialNumber = scyna.InitSerialNumber("scyna.auth")
 
-func Create(s scyna.Context, request *scyna_proto.CreateAuthRequest) scyna.Error {
+func Create(s *scyna.Endpoint, request *scyna_proto.CreateAuthRequest) scyna.Error {
 	log.Println("Receive CreateAuthRequest")
 
 	if len(request.Apps) == 0 {

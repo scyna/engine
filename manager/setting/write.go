@@ -8,7 +8,7 @@ import (
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func Write(s scyna.Context, request *scyna_proto.WriteSettingRequest) scyna.Error {
+func Write(ctx *scyna.Endpoint, request *scyna_proto.WriteSettingRequest) scyna.Error {
 	log.Println("Receive WriteSettingRequest")
 
 	if err := qb.Insert("scyna.setting").
@@ -16,7 +16,7 @@ func Write(s scyna.Context, request *scyna_proto.WriteSettingRequest) scyna.Erro
 		Query(scyna.DB).
 		Bind(request.Module, request.Key, request.Value).
 		ExecRelease(); err != nil {
-		s.Error("WriteSetting: " + err.Error())
+		ctx.Error("WriteSetting: " + err.Error())
 		return scyna.REQUEST_INVALID
 	}
 

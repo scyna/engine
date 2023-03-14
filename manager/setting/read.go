@@ -8,7 +8,7 @@ import (
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func Read(s scyna.Context, request *scyna_proto.ReadSettingRequest) scyna.Error {
+func Read(ctx *scyna.Endpoint, request *scyna_proto.ReadSettingRequest) scyna.Error {
 	log.Println("Receive ReadSettingRequest")
 
 	var value string
@@ -19,9 +19,9 @@ func Read(s scyna.Context, request *scyna_proto.ReadSettingRequest) scyna.Error 
 		Query(scyna.DB).
 		Bind(request.Module, request.Key).
 		GetRelease(&value); err != nil {
-		s.Info("Can not read setting - " + err.Error())
+		ctx.Info("Can not read setting - " + err.Error())
 		return scyna.REQUEST_INVALID
 	}
 
-	return s.OK(&scyna_proto.ReadSettingResponse{Value: value})
+	return ctx.OK(&scyna_proto.ReadSettingResponse{Value: value})
 }

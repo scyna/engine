@@ -11,9 +11,9 @@ import (
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func StartTask(s scyna.Context, request *scyna_proto.StartTaskRequest) scyna.Error {
+func StartTask(ctx *scyna.Endpoint, request *scyna_proto.StartTaskRequest) scyna.Error {
 	if err := validateStartTaskRequest(request); err != nil {
-		s.Error(err.Error())
+		ctx.Error(err.Error())
 		return scyna.REQUEST_INVALID
 	}
 
@@ -36,11 +36,11 @@ func StartTask(s scyna.Context, request *scyna_proto.StartTaskRequest) scyna.Err
 	bucket := GetBucket(start) // Generate period id
 	qBatch.Query("INSERT INTO scyna.todo(bucket, task_id) VALUES (?, ?);", bucket, taskID)
 	if err := scyna.DB.ExecuteBatch(qBatch); err != nil {
-		s.Error(err.Error())
+		ctx.Error(err.Error())
 		return scyna.REQUEST_INVALID
 	}
 
-	return s.OK(&scyna_proto.StartTaskResponse{Id: taskID})
+	return ctx.OK(&scyna_proto.StartTaskResponse{Id: taskID})
 }
 
 func validateStartTaskRequest(request *scyna_proto.StartTaskRequest) error {

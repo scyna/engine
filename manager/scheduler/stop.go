@@ -6,7 +6,7 @@ import (
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func StopTask(s scyna.Context, request *scyna_proto.StopTaskRequest) scyna.Error {
+func StopTask(ctx *scyna.Endpoint, request *scyna_proto.StopTaskRequest) scyna.Error {
 
 	if err := qb.Update("scyna.task").
 		Set("done").
@@ -14,7 +14,7 @@ func StopTask(s scyna.Context, request *scyna_proto.StopTaskRequest) scyna.Error
 		Query(scyna.DB).
 		Bind(true, request.Id).
 		ExecRelease(); err != nil {
-		s.Error(err.Error())
+		ctx.Error(err.Error())
 		return scyna.REQUEST_INVALID
 	}
 
