@@ -7,7 +7,7 @@ RUN go mod tidy
 RUN go build -o ./application .
 
 # Runtime stage
-FROM scratch
+FROM alpine:3.17
 WORKDIR /app
 COPY --from=build-env /workspace/engine/application /engine
 COPY ./.cert/ ./cert/
