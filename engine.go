@@ -59,7 +59,7 @@ func main() {
 	scyna.UseDirectLog(5)
 
 	/* generator */
-	scyna.RegisterEndpointLite(scyna_proto.GEN_GET_ID_URL, generator.GetID)
+	scyna.RegisterEndpoint(scyna_proto.GEN_GET_ID_URL, generator.GetID)
 	scyna.RegisterEndpoint(scyna_proto.GEN_GET_SN_URL, generator.GetSN)
 
 	/*logging*/
