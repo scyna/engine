@@ -12,5 +12,7 @@ CREATE TABLE module_name.event_store
 CREATE TABLE module_name.outbox
 (
     event_id        bigint PRIMARY KEY,
-    trace_id       bigint,
+    trace_id        bigint,
+    data            blob,     
+    channel         text,
 );
