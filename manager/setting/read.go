@@ -5,6 +5,7 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
@@ -12,7 +13,7 @@ func Read(ctx *scyna.Endpoint, request *scyna_proto.ReadSettingRequest) scyna.Er
 	log.Println("Receive ReadSettingRequest")
 
 	var value string
-	if err := qb.Select("scyna.setting").
+	if err := qb.Select(scyna_const.SETTING_TABLE).
 		Columns("value").
 		Where(qb.Eq("module"), qb.Eq("key")).
 		Limit(1).

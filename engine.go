@@ -7,6 +7,7 @@ import (
 	"time"
 
 	scyna "github.com/scyna/core"
+	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
 
 	"github.com/scyna/go/engine/gateway"
@@ -59,30 +60,30 @@ func main() {
 	scyna.UseDirectLog(5)
 
 	/* generator */
-	scyna.RegisterEndpoint(scyna_proto.GEN_GET_ID_URL, generator.GetID)
-	scyna.RegisterEndpoint(scyna_proto.GEN_GET_SN_URL, generator.GetSN)
+	scyna.RegisterEndpoint(scyna_const.GEN_GET_ID_URL, generator.GetID)
+	scyna.RegisterEndpoint(scyna_const.GEN_GET_SN_URL, generator.GetSN)
 
 	/*logging*/
-	scyna.RegisterSignal(scyna_proto.LOG_CREATED_CHANNEL, logging.Write)
+	scyna.RegisterSignal(scyna_const.LOG_CREATED_CHANNEL, logging.Write)
 
 	/*trace*/
-	scyna.RegisterSignal(scyna_proto.TRACE_CREATED_CHANNEL, trace.TraceCreated)
-	scyna.RegisterSignal(scyna_proto.TAG_CREATED_CHANNEL, trace.TagCreated)
-	scyna.RegisterSignal(scyna_proto.ENDPOINT_DONE_CHANNEL, trace.ServiceDone)
+	scyna.RegisterSignal(scyna_const.TRACE_CREATED_CHANNEL, trace.TraceCreated)
+	scyna.RegisterSignal(scyna_const.TAG_CREATED_CHANNEL, trace.TagCreated)
+	scyna.RegisterSignal(scyna_const.ENDPOINT_DONE_CHANNEL, trace.ServiceDone)
 
 	/*setting*/
-	scyna.RegisterEndpoint(scyna_proto.SETTING_READ_URL, setting.Read)
-	scyna.RegisterEndpoint(scyna_proto.SETTING_WRITE_URL, setting.Write)
-	scyna.RegisterEndpoint(scyna_proto.SETTING_REMOVE_URL, setting.Remove)
+	scyna.RegisterEndpoint(scyna_const.SETTING_READ_URL, setting.Read)
+	scyna.RegisterEndpoint(scyna_const.SETTING_WRITE_URL, setting.Write)
+	scyna.RegisterEndpoint(scyna_const.SETTING_REMOVE_URL, setting.Remove)
 
 	/*authentication*/
-	scyna.RegisterEndpoint(scyna_proto.AUTH_CREATE_URL, authentication.Create)
-	scyna.RegisterEndpoint(scyna_proto.AUTH_GET_URL, authentication.Get)
-	scyna.RegisterEndpoint(scyna_proto.AUTH_LOGOUT_URL, authentication.Logout)
+	scyna.RegisterEndpoint(scyna_const.AUTH_CREATE_URL, authentication.Create)
+	scyna.RegisterEndpoint(scyna_const.AUTH_GET_URL, authentication.Get)
+	scyna.RegisterEndpoint(scyna_const.AUTH_LOGOUT_URL, authentication.Logout)
 
 	/* task */
-	scyna.RegisterEndpoint(scyna_proto.START_TASK_URL, scheduler.StartTask)
-	scyna.RegisterEndpoint(scyna_proto.STOP_TASK_URL, scheduler.StopTask)
+	scyna.RegisterEndpoint(scyna_const.START_TASK_URL, scheduler.StartTask)
+	scyna.RegisterEndpoint(scyna_const.STOP_TASK_URL, scheduler.StopTask)
 
 	/* admin */
 	//scyna.RegisterEndpoint(admin.CREATE_CLIENT_URL, admin.CreateClientHandler)
@@ -133,9 +134,9 @@ func main() {
 	/* Start worker */
 	scheduler.Start(time.Second * 10)
 	/*session*/
-	scyna.RegisterSignal(scyna_proto.SESSION_END_CHANNEL, session.End)
-	scyna.RegisterSignal(scyna_proto.SESSION_UPDATE_CHANNEL, session.Update)
-	http.HandleFunc(scyna_proto.SESSION_CREATE_URL, session.Create)
+	scyna.RegisterSignal(scyna_const.SESSION_END_CHANNEL, session.End)
+	scyna.RegisterSignal(scyna_const.SESSION_UPDATE_CHANNEL, session.Update)
+	http.HandleFunc(scyna_const.SESSION_CREATE_URL, session.Create)
 	log.Println("Scyna Manager Start with port " + *managerPort)
 	if *certificateEnable && *certificateFile != "" {
 		if err := http.ListenAndServeTLS(":"+*managerPort, *certificateFile, *certificateKey, nil); err != nil {

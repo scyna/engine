@@ -9,6 +9,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
 
+	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
 	scyna_utils "github.com/scyna/core/utils"
 )
@@ -21,7 +22,7 @@ func TraceCreated(signal *scyna_proto.TraceCreatedSignal) {
 	}
 
 	if signal.ParentID == 0 {
-		if err := qb.Insert("scyna.trace").
+		if err := qb.Insert(scyna_const.TRACE_TABLE).
 			Columns("type", "path", "day", "id", "time", "duration", "session_id", "source", "status").
 			Query(scyna.DB).
 			Bind(
@@ -39,7 +40,7 @@ func TraceCreated(signal *scyna_proto.TraceCreatedSignal) {
 		}
 	} else {
 		qBatch := scyna.DB.NewBatch(gocql.LoggedBatch)
-		qBatch.Query("INSERT INTO scyna.trace(type, path, day, id, time, duration, session_id, parent_id, source, status)"+
+		qBatch.Query("INSERT INTO "+scyna_const.TRACE_TABLE+"(type, path, day, id, time, duration, session_id, parent_id, source, status)"+
 			" VALUES (?,?,?,?,?,?,?,?,?,?)",
 			signal.Type,
 			signal.Path,
@@ -51,7 +52,7 @@ func TraceCreated(signal *scyna_proto.TraceCreatedSignal) {
 			signal.ParentID,
 			source,
 			signal.Status)
-		qBatch.Query("INSERT INTO scyna.span(parent_id, child_id) VALUES (?,?)", signal.ParentID, signal.ID)
+		qBatch.Query("INSERT INTO "+scyna_const.SPAN_TABLE+"(parent_id, child_id) VALUES (?,?)", signal.ParentID, signal.ID)
 
 		if err := scyna.DB.ExecuteBatch(qBatch); err != nil {
 			log.Print("Can not save trace created " + strconv.FormatUint(signal.ID, 10) + " / " + strconv.FormatUint(signal.ParentID, 10) + " / " + err.Error())

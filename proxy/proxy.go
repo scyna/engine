@@ -9,6 +9,7 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_const "github.com/scyna/core/const"
 	scyna_utils "github.com/scyna/core/utils"
 	"google.golang.org/protobuf/proto"
 )
@@ -76,7 +77,7 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if err := qb.Select("scyna.client_use_endpoint").
+	if err := qb.Select(scyna_const.CLIENT_USE_ENDPOINT_TABLE).
 		Columns("url").
 		Where(qb.Eq("client"), qb.Eq("url")).
 		Limit(1).

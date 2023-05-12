@@ -6,6 +6,7 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
@@ -26,7 +27,7 @@ func GetSN(ctx *scyna.Endpoint, request *scyna_proto.GetSNRequest) scyna.Error {
 func nextBucket(key string) *scyna_proto.GetSNResponse {
 	prefix := time.Now().Unix() / (60 * 60 * 24)
 	seed := 0
-	if err := qb.Select("scyna.gen_sn").
+	if err := qb.Select(scyna_const.GEN_SN_TABLE).
 		Columns("seed").
 		Where(qb.Eq("key"), qb.Eq("prefix")).
 		Limit(1).
@@ -38,7 +39,7 @@ func nextBucket(key string) *scyna_proto.GetSNResponse {
 		log.Print("OneID:", err)
 	}
 
-	if applied, err := qb.Insert("scyna.gen_sn").
+	if applied, err := qb.Insert(scyna_const.GEN_SN_TABLE).
 		Columns("key", "prefix", "seed").
 		Unique().
 		Query(scyna.DB).

@@ -7,6 +7,7 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
@@ -42,10 +43,10 @@ func createAuth(id string, apps []string, userID string) scyna.Error {
 
 	session := scyna.DB.Session
 	batch := session.NewBatch(gocql.LoggedBatch)
-	batch.Query("INSERT INTO scyna.authentication (id, apps, expired, time, uid) VALUES (?,?,?,?,?);",
+	batch.Query("INSERT INTO "+scyna_const.AUTHENTICATION_TABLE+" (id, apps, expired, time, uid) VALUES (?,?,?,?,?);",
 		id, apps, exp, now, userID)
 	for _, app := range apps {
-		batch.Query("INSERT INTO scyna.app_has_auth (app, auth, uid) VALUES (?,?,?);",
+		batch.Query("INSERT INTO "+scyna_const.APP_HAS_AUTH_TABLE+" (app, auth, uid) VALUES (?,?,?);",
 			app, id, userID)
 	}
 	if err := session.ExecuteBatch(batch); err != nil {
@@ -56,7 +57,7 @@ func createAuth(id string, apps []string, userID string) scyna.Error {
 }
 
 func checkApp(code string) bool {
-	if err := qb.Select("scyna.application").
+	if err := qb.Select(scyna_const.APPLICATION_TABLE).
 		Columns("code").
 		Where(qb.Eq("code")).
 		Query(scyna.DB).

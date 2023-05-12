@@ -1,7 +1,5 @@
-USE scyna2;
-
-DROP TABLE IF EXISTS  session;
-CREATE TABLE  session
+DROP TABLE IF EXISTS scyna.session;
+CREATE TABLE scyna.session
 (
     id          bigint,
     module      text,
@@ -11,10 +9,10 @@ CREATE TABLE  session
     exit_code   int, /*normal, crash, ....*/
     PRIMARY KEY (module, id) 
 );
-CREATE INDEX ON  session (id);
+CREATE INDEX ON scyna.session (id);
 
-DROP TABLE IF EXISTS  session_log;
-CREATE TABLE  session_log
+DROP TABLE IF EXISTS scyna.session_log;
+CREATE TABLE scyna.session_log
 (
     session_id bigint,
     day        int,

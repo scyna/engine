@@ -6,6 +6,7 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
@@ -41,7 +42,7 @@ func allocate() (ok bool, prefix uint32, start uint64, end uint64) {
 	ok = false
 
 	seed := 0
-	if err := qb.Select("scyna.gen_id").
+	if err := qb.Select(scyna_const.GEN_ID_TABLE).
 		Columns("seed").
 		Where(qb.Eq("prefix")).
 		Limit(1).
@@ -53,7 +54,7 @@ func allocate() (ok bool, prefix uint32, start uint64, end uint64) {
 		log.Println("generator.allocate: get seed: " + err.Error())
 	}
 
-	if applied, err := qb.Insert("scyna.gen_id").
+	if applied, err := qb.Insert(scyna_const.GEN_ID_TABLE).
 		Columns("prefix", "seed").
 		Unique().
 		Query(scyna.DB).

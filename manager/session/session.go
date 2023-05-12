@@ -6,6 +6,7 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_const "github.com/scyna/core/const"
 )
 
 func Init(module string, secret string) {
@@ -19,7 +20,7 @@ func Init(module string, secret string) {
 func newSession(module string, secret string) (uint64, scyna.Error) {
 	log.Print("Creating session for module: ", module)
 	var secret_ string
-	if err := qb.Select("scyna.module").
+	if err := qb.Select(scyna_const.MODULE_TABLE).
 		Columns("secret").
 		Where(qb.Eq("code")).
 		Limit(1).
@@ -38,7 +39,7 @@ func newSession(module string, secret string) (uint64, scyna.Error) {
 	sid := scyna.ID.Next()
 	now := time.Now()
 
-	if err := qb.Insert("scyna.session").
+	if err := qb.Insert(scyna_const.SESSION_TABLE).
 		Columns("id", "module", "start", "last_update").
 		Query(scyna.DB).
 		Bind(sid, module, now, now).

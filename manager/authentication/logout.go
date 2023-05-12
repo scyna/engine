@@ -6,6 +6,7 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
@@ -21,7 +22,7 @@ func Logout(ctx *scyna.Endpoint, request *scyna_proto.LogoutRequest) scyna.Error
 
 func updateSession(token string, userID string) scyna.Error {
 	var userID_ string
-	err := qb.Select("scyna.authentication").
+	err := qb.Select(scyna_const.AUTHENTICATION_TABLE).
 		Columns("uid").
 		Where(qb.Eq("id")).
 		Limit(1).
@@ -39,7 +40,7 @@ func updateSession(token string, userID string) scyna.Error {
 
 	now := time.Now()
 
-	err = qb.Update("scyna.authentication").
+	err = qb.Update(scyna_const.AUTHENTICATION_TABLE).
 		Set("expired").
 		Where(qb.Eq("id")).
 		Query(scyna.DB).

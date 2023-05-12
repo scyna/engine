@@ -6,6 +6,7 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
@@ -31,7 +32,7 @@ func getAuthentication(token string, app string) (*time.Time, string) {
 		UserID  string    `db:"uid"`
 	}
 
-	if err := qb.Select("scyna.authentication").
+	if err := qb.Select(scyna_const.AUTHENTICATION_TABLE).
 		Columns("expired", "apps", "uid").
 		Where(qb.Eq("id")).
 		Limit(1).

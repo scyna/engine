@@ -1,2 +1,3 @@
 DROP KEYSPACE IF EXISTS scyna;
-CREATE KEYSPACE scyna WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
+DROP KEYSPACE IF EXISTS scyna2;
+CREATE KEYSPACE scyna2 WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };

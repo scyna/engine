@@ -7,10 +7,11 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_const "github.com/scyna/core/const"
 )
 
 func updateSession(token string, exp time.Time) bool {
-	err := qb.Update("scyna.authentication").
+	err := qb.Update(scyna_const.AUTHENTICATION_TABLE).
 		Set("expired").
 		Where(qb.Eq("id")).
 		Query(scyna.DB).
@@ -26,7 +27,7 @@ func checkAuthentication(token string, app string, url string) *time.Time {
 		Apps    []string  `db:"apps"`
 	}
 
-	if err := qb.Select("scyna.authentication").
+	if err := qb.Select(scyna_const.AUTHENTICATION_TABLE).
 		Columns("expired", "apps").
 		Where(qb.Eq("id")).
 		Limit(1).

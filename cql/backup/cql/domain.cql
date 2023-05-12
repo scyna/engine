@@ -1,48 +1,46 @@
-USE scyna2;
-
 /*module*/
-DROP TABLE IF EXISTS module;
-CREATE TABLE module
+DROP TABLE IF EXISTS scyna.module;
+CREATE TABLE scyna.module
 (
     code        text PRIMARY KEY,
     secret      text,
 );
 
 /*client*/
-DROP TABLE IF EXISTS client;
-CREATE TABLE client
+DROP TABLE IF EXISTS scyna.client;
+CREATE TABLE scyna.client
 (
     id          text PRIMARY KEY,
     secret      text, 
 );
 
 /*application*/
-DROP TABLE IF EXISTS application;
-CREATE TABLE  application
+DROP TABLE IF EXISTS scyna.application;
+CREATE TABLE scyna.application
 (
     code        text PRIMARY KEY,
     auth_url    text,
 );
 
 /*relations*/
-DROP TABLE IF EXISTS  client_use_endpoint;
-CREATE TABLE  client_use_endpoint
+DROP TABLE IF EXISTS scyna.client_use_endpoint;
+CREATE TABLE scyna.client_use_endpoint
 (
     client      text,   /*client id*/  
     url         text,   /*endpoint path*/
     PRIMARY KEY (client, url)
 );
 
-DROP TABLE IF EXISTS  application_use_endpoint;
-CREATE TABLE  application_use_endpoint
+DROP TABLE IF EXISTS scyna.application_use_endpoint;
+CREATE TABLE scyna.application_use_endpoint
 (
     application     text,   /*application code*/  
     url             text,   /*endpoint path*/
     PRIMARY KEY (application, url)
 );
 
-DROP TABLE IF EXISTS  authentication;
-CREATE TABLE  authentication
+DROP TABLE IF EXISTS scyna.authentication;
+CREATE TABLE scyna.authentication
 (
     id      text PRIMARY KEY,
     time    timestamp,
@@ -51,8 +49,8 @@ CREATE TABLE  authentication
     uid     text,
 );
 
-DROP TABLE IF EXISTS  app_has_auth;
-CREATE TABLE  app_has_auth
+DROP TABLE IF EXISTS scyna.app_has_auth;
+CREATE TABLE scyna.app_has_auth
 (
     app     text,
     auth    text,
@@ -60,9 +58,10 @@ CREATE TABLE  app_has_auth
     PRIMARY KEY (app, auth)
 );
 
+
 /*setting*/
-DROP TABLE IF EXISTS  setting;
-CREATE TABLE  setting
+DROP TABLE IF EXISTS scyna.setting;
+CREATE TABLE scyna.setting
 (
     module     text,
     key         text,

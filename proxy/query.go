@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	scyna "github.com/scyna/core"
+	scyna_const "github.com/scyna/core/const"
 
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -19,7 +20,7 @@ type QueryPool struct {
 
 func NewQuery() *Query {
 	return &Query{
-		Authenticate: qb.Select("scyna.client_use_endpoint").
+		Authenticate: qb.Select(scyna_const.CLIENT_USE_ENDPOINT_TABLE).
 			Columns("url").
 			Where(qb.Eq("client"), qb.Eq("url")).
 			Limit(1).

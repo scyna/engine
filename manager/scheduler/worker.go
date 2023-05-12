@@ -8,6 +8,7 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_const "github.com/scyna/core/const"
 )
 
 type worker struct {
@@ -18,17 +19,17 @@ type worker struct {
 
 func NewWorker() *worker {
 	return &worker{
-		qCheck: qb.Insert("scyna.doing").
+		qCheck: qb.Insert(scyna_const.DOING_TABLE).
 			Columns("bucket", "task_id").
 			Unique().
 			TTL(60 * time.Second).
 			Query(scyna.DB),
-		qGet: qb.Select("scyna.task").
+		qGet: qb.Select(scyna_const.TASK_TABLE).
 			Columns("id", "topic", "data", "next", "interval", "loop_index", "loop_count", "done").
 			Where(qb.Eq("id")).
 			Limit(1).
 			Query(scyna.DB),
-		qTodos: qb.Select("scyna.todo").
+		qTodos: qb.Select(scyna_const.TODO_TABLE).
 			Columns("task_id").
 			Where(qb.Eq("bucket")).
 			Limit(20).
@@ -79,7 +80,7 @@ func (w *worker) process(bucket int64, id int64) {
 	}
 
 	if t.Done {
-		if err := qb.Delete("scyna.todo").
+		if err := qb.Delete(scyna_const.TODO_TABLE).
 			Where(qb.Eq("bucket"), qb.Eq("task_id")).
 			Query(scyna.DB).
 			Bind(bucket, id).
@@ -92,16 +93,16 @@ func (w *worker) process(bucket int64, id int64) {
 	scyna.JetStream.Publish(t.Topic, t.Data) /*activate task handler*/
 
 	qBatch := scyna.DB.NewBatch(gocql.LoggedBatch)
-	qBatch.Query("DELETE FROM scyna.todo WHERE bucket = ? AND task_id = ?;", bucket, id) /* remove old task from todolist */
+	qBatch.Query("DELETE FROM "+scyna_const.TODO_TABLE+" WHERE bucket = ? AND task_id = ?;", bucket, id) /* remove old task from todolist */
 
 	t.LoopIndex++
 	if t.LoopIndex < t.LoopCount {
 		t.Next = t.Next.Add(time.Second * time.Duration(t.Interval)) /* calculate next */
 		nextBucket := GetBucket(t.Next)
-		qBatch.Query("INSERT INTO scyna.todo (bucket, task_id) VALUES (?, ?);", nextBucket, t.ID) /* add new task to todo list */
-		qBatch.Query("UPDATE scyna.task SET next = ?, loop_index = ?  WHERE id = ?;", t.Next, t.LoopIndex, t.ID)
+		qBatch.Query("INSERT INTO "+scyna_const.TODO_TABLE+" (bucket, task_id) VALUES (?, ?);", nextBucket, t.ID) /* add new task to todo list */
+		qBatch.Query("UPDATE "+scyna_const.TASK_TABLE+" SET next = ?, loop_index = ?  WHERE id = ?;", t.Next, t.LoopIndex, t.ID)
 	} else {
-		qBatch.Query("UPDATE scyna.task SET done = true WHERE id = ?;", t.ID)
+		qBatch.Query("UPDATE "+scyna_const.TASK_TABLE+" SET done = true WHERE id = ?;", t.ID)
 	}
 
 	if err := scyna.DB.ExecuteBatch(qBatch); err != nil {

@@ -8,6 +8,7 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/gocql/gocql"
 	scyna "github.com/scyna/core"
+	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
@@ -27,14 +28,14 @@ func StartTask(ctx *scyna.Endpoint, request *scyna_proto.StartTaskRequest) scyna
 	taskID := scyna.ID.Next()
 	start := time.Unix(request.Time, 0)
 	qBatch := scyna.DB.NewBatch(gocql.LoggedBatch)
-	qBatch.Query("INSERT INTO scyna.task(id, topic, data, start, next, interval, loop_count, loop_index, done) "+
+	qBatch.Query("INSERT INTO "+scyna_const.TASK_TABLE+"cyna.task(id, topic, data, start, next, interval, loop_count, loop_index, done) "+
 		"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
 		taskID, request.Topic, request.Data, start, start, request.Interval, request.Loop, 0, false)
 
-	qBatch.Query("INSERT INTO scyna.module_has_task(module, task_id) VALUES (?, ?);", request.Module, taskID)
+	qBatch.Query("INSERT INTO "+scyna_const.MODULE_HAS_TASK_TABLE+"(module, task_id) VALUES (?, ?);", request.Module, taskID)
 
 	bucket := GetBucket(start) // Generate period id
-	qBatch.Query("INSERT INTO scyna.todo(bucket, task_id) VALUES (?, ?);", bucket, taskID)
+	qBatch.Query("INSERT INTO "+scyna_const.TODO_TABLE+"(bucket, task_id) VALUES (?, ?);", bucket, taskID)
 	if err := scyna.DB.ExecuteBatch(qBatch); err != nil {
 		ctx.Error(err.Error())
 		return scyna.REQUEST_INVALID
