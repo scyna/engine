@@ -2,14 +2,14 @@ module github.com/scyna/go/engine
 
 go 1.19
 
-// replace github.com/scyna/core => ../core
+replace github.com/scyna/core => ../core
 
 require (
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/gocql/gocql v1.0.0
 	github.com/nats-io/nats.go v1.23.0
 	github.com/scylladb/gocqlx/v2 v2.7.0
-	github.com/scyna/core v1.1.10
+	github.com/scyna/core v0.0.0-00010101000000-000000000000
 	google.golang.org/protobuf v1.28.0
 )
 
@@ -28,5 +28,4 @@ require (
 	github.com/stretchr/testify v1.7.0 // indirect
 	golang.org/x/crypto v0.5.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
