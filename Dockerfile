@@ -11,9 +11,9 @@ FROM alpine:3.17
 WORKDIR /app
 COPY --from=build-env /workspace/engine/application /engine
 COPY ./.cert/ ./cert/
-ENV MANAGER_PORT=8081 \
-    PROXY_PORT=8080 \
-    GATEWAY_PORT=8443 \
+ENV MANAGER_PORT=6081 \
+    PROXY_PORT=6060 \
+    GATEWAY_PORT=6443 \
     NATS_URL=localhost \
     NATS_USERNAME="" \
     NATS_PASSWORD="" \
@@ -22,7 +22,9 @@ ENV MANAGER_PORT=8081 \
     DB_PASSWORD="" \
     DB_LOCATION="" \
     CERTIFICATE_FILE="/cert/localhost.crt" \
-    CERTIFICATE_KEY="/cert/localhost.key"
+    CERTIFICATE_KEY="/cert/localhost.key" \
+    CERTIFICATE_ENABLE="false"
+
 EXPOSE $MANAGER_PORT $PROXY_PORT $GATEWAY_PORT
 CMD ["/engine", \
     "--manager_port=${MANAGER_PORT}", \
@@ -36,4 +38,6 @@ CMD ["/engine", \
     "--db_password=${DB_PASSWORD}", \
     "--db_location=${DB_LOCATION}", \
     "--certificateFile=${CERTIFICATE_FILE}", \
-    "--certificateKey=${CERTIFICATE_KEY}"]
+    "--certificateKey=${CERTIFICATE_KEY}", \
+    "--certificateEnable=${CERTIFICATE_ENABLE}"
+    ]
