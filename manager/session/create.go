@@ -6,9 +6,12 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
+	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
 	"github.com/scyna/go/engine/manager/manager"
+	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -35,9 +38,28 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		var response scyna_proto.CreateSessionResponse
 		response.SessionID = sid
 
-		/*TODO: load config from setting*/
+		var value string
+		if err := qb.Select(scyna_const.SETTING_TABLE).
+			Columns("value").
+			Where(qb.Eq("module_code"), qb.Eq("key")).
+			Limit(1).
+			Query(scyna.DB).
+			Bind(request.Module, scyna_const.SETTING_KEY).
+			GetRelease(&value); err != nil {
+			log.Println("Can not find module config for module " + request.Module + " - " + err.Error())
+		}
 
-		response.Config = manager.DefaultConfig
+		if len(value) > 0 {
+			var config scyna_proto.Configuration
+			err := protojson.Unmarshal([]byte(value), &config)
+			if err != nil {
+				response.Config = manager.DefaultConfig
+			} else {
+				response.Config = &config
+			}
+		} else {
+			response.Config = manager.DefaultConfig
+		}
 
 		if data, err := proto.Marshal(&response); err == nil {
 			w.WriteHeader(200)
