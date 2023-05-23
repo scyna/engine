@@ -47,7 +47,7 @@ func checkAuthentication(token string, app string, url string) *time.Time {
 	}
 
 	if !hasApp {
-		log.Print("No app")
+		log.Print("No app in auth" + app)
 		return nil
 	}
 

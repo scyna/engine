@@ -36,7 +36,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	log.Print(url)
+	log.Print("App:", appID, " Url:", url)
 
 	ctx := gateway.Contexts.GetContext()
 	defer gateway.Contexts.PutContext(ctx)
@@ -78,7 +78,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		url = app.AuthURL
 		log.Print(url)
 	} else {
-		if cookie, err := req.Cookie("session"); err == nil {
+		if cookie, err := req.Cookie(appID); err == nil {
 			token := cookie.Value
 			ctx.Request.Data = token
 			exp := checkAuthentication(token, appID, url)
@@ -155,7 +155,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	if auth {
 		if ctx.Response.Code == 200 {
 			cookie := &http.Cookie{
-				Name:     "session",
+				Name:     appID,
 				Value:    ctx.Response.Token,
 				Path:     "/",
 				Expires:  time.Unix(0, int64(ctx.Response.Expired*1000)),
@@ -167,7 +167,7 @@ func (gateway *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 			log.Print("Set cookie:", ctx.Response.Token)
 		} else {
 			c := &http.Cookie{
-				Name:     "session",
+				Name:     appID,
 				Value:    "",
 				Path:     "/",
 				Expires:  time.Unix(0, 0),

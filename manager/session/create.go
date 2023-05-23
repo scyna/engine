@@ -41,7 +41,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		var value string
 		if err := qb.Select(scyna_const.SETTING_TABLE).
 			Columns("value").
-			Where(qb.Eq("module_code"), qb.Eq("key")).
+			Where(qb.Eq("module"), qb.Eq("key")).
 			Limit(1).
 			Query(scyna.DB).
 			Bind(request.Module, scyna_const.SETTING_KEY).
