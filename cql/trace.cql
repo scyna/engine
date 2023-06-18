@@ -17,15 +17,6 @@ CREATE TABLE  trace
 );
 CREATE INDEX ON  trace(id);
 
-DROP TABLE IF EXISTS  app_has_trace;
-CREATE TABLE  app_has_trace
-(
-    app_code     text,
-    trace_id     bigint,
-    day         int,
-    PRIMARY KEY ((app_code,day), trace_id)
-);
-
 DROP TABLE IF EXISTS  client_has_trace;
 CREATE TABLE  client_has_trace
 (

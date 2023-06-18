@@ -16,48 +16,12 @@ CREATE TABLE client
     secret      text, 
 );
 
-/*application*/
-DROP TABLE IF EXISTS application;
-CREATE TABLE  application
-(
-    code        text PRIMARY KEY,
-    auth_url    text,
-);
-
-/*relations*/
 DROP TABLE IF EXISTS  client_use_endpoint;
 CREATE TABLE  client_use_endpoint
 (
-    client      text,   /*client id*/  
-    url         text,   /*endpoint path*/
+    client      text,   
+    url         text,   
     PRIMARY KEY (client, url)
-);
-
-DROP TABLE IF EXISTS  application_use_endpoint;
-CREATE TABLE  application_use_endpoint
-(
-    application     text,   /*application code*/  
-    url             text,   /*endpoint path*/
-    PRIMARY KEY (application, url)
-);
-
-DROP TABLE IF EXISTS  authentication;
-CREATE TABLE  authentication
-(
-    id      text PRIMARY KEY,
-    time    timestamp,
-    expired timestamp,
-    apps    list<text>,
-    uid     text,
-);
-
-DROP TABLE IF EXISTS  app_has_auth;
-CREATE TABLE  app_has_auth
-(
-    app     text,
-    auth    text,
-    uid     text,
-    PRIMARY KEY (app, auth)
 );
 
 /*setting*/

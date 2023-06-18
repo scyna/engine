@@ -62,10 +62,7 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		Source:    clientID,
 		SessionID: scyna.Session.ID(),
 	}
-	defer trace.Save()
-
-	// query := proxy.Queries.GetQuery()
-	// defer proxy.Queries.Put(query)
+	defer saveTrace(trace)
 
 	ctx := proxy.Contexts.GetContext()
 	defer proxy.Contexts.PutContext(ctx)

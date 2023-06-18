@@ -10,8 +10,6 @@ import (
 	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
 
-	"github.com/scyna/go/engine/gateway"
-	"github.com/scyna/go/engine/manager/authentication"
 	"github.com/scyna/go/engine/manager/generator"
 	"github.com/scyna/go/engine/manager/logging"
 	"github.com/scyna/go/engine/manager/scheduler"
@@ -26,7 +24,7 @@ const MODULE_CODE = "scyna_engine"
 func main() {
 	managerPort := flag.String("manager_port", "8081", "Manager Port")
 	proxyPort := flag.String("proxy_port", "8080", "Proxy Port")
-	gatewayPort := flag.String("gateway_port", "8443", "GateWay Port")
+	//gatewayPort := flag.String("gateway_port", "8443", "GateWay Port")
 
 	natsUrl := flag.String("nats_url", "127.0.0.1", "Nats URL")
 	natsUsername := flag.String("nats_username", "", "Nats Username")
@@ -76,19 +74,9 @@ func main() {
 	scyna.RegisterEndpoint(scyna_const.SETTING_WRITE_URL, setting.Write)
 	scyna.RegisterEndpoint(scyna_const.SETTING_REMOVE_URL, setting.Remove)
 
-	/*authentication*/
-	scyna.RegisterEndpoint(scyna_const.AUTH_CREATE_URL, authentication.Create)
-	scyna.RegisterEndpoint(scyna_const.AUTH_GET_URL, authentication.Get)
-	scyna.RegisterEndpoint(scyna_const.AUTH_LOGOUT_URL, authentication.Logout)
-
 	/* task */
 	scyna.RegisterEndpoint(scyna_const.START_TASK_URL, scheduler.StartTask)
 	scyna.RegisterEndpoint(scyna_const.STOP_TASK_URL, scheduler.StopTask)
-
-	/* admin */
-	//scyna.RegisterEndpoint(admin.CREATE_CLIENT_URL, admin.CreateClientHandler)
-	//scyna.RegisterEndpoint(admin.CREATE_CONTEXT_URL, admin.CreateContextHandler)
-	//scyna.RegisterEndpoint(admin.CREATE_ENDPOINT_URL, admin.CreateEndpointHandler)
 
 	/* Update config */
 	setting.UpdateDefaultConfig(&config)
@@ -101,20 +89,20 @@ func main() {
 		*certificateKey = DEFAULT_CERT_KEY
 	}
 
-	go func() {
-		gateway_ := gateway.NewGateway()
-		log.Println("Scyna Gateway Start with port " + *gatewayPort)
+	// go func() {
+	// 	gateway_ := gateway.NewGateway()
+	// 	log.Println("Scyna Gateway Start with port " + *gatewayPort)
 
-		if *certificateEnable {
-			if err := http.ListenAndServeTLS(":"+*gatewayPort, *certificateFile, *certificateKey, gateway_); err != nil {
-				log.Println("Gateway: " + err.Error())
-			}
-		} else {
-			if err := http.ListenAndServe(":"+*gatewayPort, gateway_); err != nil {
-				log.Println("Gateway: " + err.Error())
-			}
-		}
-	}()
+	// 	if *certificateEnable {
+	// 		if err := http.ListenAndServeTLS(":"+*gatewayPort, *certificateFile, *certificateKey, gateway_); err != nil {
+	// 			log.Println("Gateway: " + err.Error())
+	// 		}
+	// 	} else {
+	// 		if err := http.ListenAndServe(":"+*gatewayPort, gateway_); err != nil {
+	// 			log.Println("Gateway: " + err.Error())
+	// 		}
+	// 	}
+	// }()
 
 	go func() {
 		proxy_ := proxy.NewProxy()
