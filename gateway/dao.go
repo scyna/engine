@@ -25,11 +25,11 @@ func saveTrace(trace scyna.Trace) {
 		trace.Source,
 		trace.Status,
 	)
-	qBatch.Query("INSERT INTO "+scyna_const.TAG_TABLE+"(trace_id, key, value) VALUES (?,?,?)",
-		trace.ID,
-		"request",
-		trace.RequestBody,
-	)
+	// qBatch.Query("INSERT INTO "+scyna_const.TAG_TABLE+"(trace_id, key, value) VALUES (?,?,?)",
+	// 	trace.ID,
+	// 	"request",
+	// 	trace.RequestBody,
+	// )
 	if err := scyna.DB.ExecuteBatch(qBatch); err != nil {
 		scyna.Session.Error("Can not save trace - " + err.Error())
 	}
