@@ -51,17 +51,17 @@ func checkAuthentication(token string, app string, url string) *time.Time {
 		return nil
 	}
 
-	// /*check app_use_service*/
-	// if err := qb.Select("scyna.app_use_service").
-	// 	Columns("app_code").
-	// 	Where(qb.Eq("app_code"), qb.Eq("service_url")).
-	// 	Limit(1).
-	// 	Query(scyna.DB).
-	// 	Bind(app, url).
-	// 	GetRelease(&app); err != nil {
-	// 	log.Println("app_use_service",err.Error())
-	// 	return false
-	// }
+	/*check app_use_service*/
+	if err := qb.Select(scyna_const.APP_USE_ENDPOINT_TABLE).
+		Columns("application").
+		Where(qb.Eq("application"), qb.Eq("url")).
+		Limit(1).
+		Query(scyna.DB).
+		Bind(app, url).
+		GetRelease(&app); err != nil {
+		log.Println("application_use_endpoint", err.Error())
+		return nil
+	}
 	ret := auth.Expired
 	return &ret
 }

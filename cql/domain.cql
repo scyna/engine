@@ -6,6 +6,7 @@ CREATE TABLE module
 (
     code        text PRIMARY KEY,
     secret      text,
+    name        text,
 );
 
 /*client*/
@@ -13,7 +14,8 @@ DROP TABLE IF EXISTS client;
 CREATE TABLE client
 (
     id          text PRIMARY KEY,
-    secret      text, 
+    secret      text,
+    name        text, 
 );
 
 /*application*/
@@ -22,6 +24,7 @@ CREATE TABLE  application
 (
     code        text PRIMARY KEY,
     auth_url    text,
+    name        text,
 );
 
 /*relations*/
@@ -58,6 +61,23 @@ CREATE TABLE  app_has_auth
     auth    text,
     uid     text,
     PRIMARY KEY (app, auth)
+);
+
+DROP TABLE IF EXISTS endpoint;
+CREATE TABLE  endpoint
+(
+    url         text PRIMARY KEY,
+    method      text,
+    module      text,
+    description text,
+);
+
+DROP TABLE IF EXISTS module_has_endpoint;
+CREATE TABLE  module_has_endpoint
+(
+    module      text,
+    url         text,
+    PRIMARY KEY (module, url)
 );
 
 /*setting*/
