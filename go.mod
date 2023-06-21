@@ -1,4 +1,4 @@
-module github.com/scyna/go/engine
+module github.com/scyna/engine
 
 go 1.19
 
@@ -10,7 +10,7 @@ require (
 	github.com/nats-io/nats.go v1.23.0
 	github.com/scylladb/gocqlx v1.5.0
 	github.com/scylladb/gocqlx/v2 v2.7.0
-	github.com/scyna/core v1.2.2
+	github.com/scyna/core v1.2.4
 	google.golang.org/protobuf v1.28.0
 )
 
