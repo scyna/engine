@@ -12,8 +12,9 @@ import (
 )
 
 type Gateway struct {
-	Queries  QueryPool
-	Contexts scyna_utils.HttpContextPool
+	Queries         QueryPool
+	Contexts        scyna_utils.HttpContextPool
+	PublicEndpoints []string
 }
 
 func NewGateway() *Gateway {
@@ -21,6 +22,7 @@ func NewGateway() *Gateway {
 		Queries:  NewQueryPool(),
 		Contexts: scyna_utils.NewContextPool(),
 	}
+	ret.initPublicEndpoints()
 	return ret
 }
 
@@ -65,6 +67,13 @@ func (proxy *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	} else {
 		http.Error(rw, "Content-Type must be JSON or PROTOBUF ", http.StatusNotAcceptable)
 		trace.Status = http.StatusNotAcceptable
+		return
+	}
+
+	/* check url within public endpoint */
+	if !proxy.isPublicEndpoint(url) {
+		http.Error(rw, "Unauthorized", http.StatusUnauthorized)
+		trace.Status = http.StatusUnauthorized
 		return
 	}
 
