@@ -36,33 +36,6 @@ CREATE TABLE  client_use_endpoint
     PRIMARY KEY (client, url)
 );
 
-DROP TABLE IF EXISTS  application_use_endpoint;
-CREATE TABLE  application_use_endpoint
-(
-    application     text,   /*application code*/  
-    url             text,   /*endpoint path*/
-    PRIMARY KEY (application, url)
-);
-
-DROP TABLE IF EXISTS  authentication;
-CREATE TABLE  authentication
-(
-    id      text PRIMARY KEY,
-    time    timestamp,
-    expired timestamp,
-    apps    list<text>,
-    uid     text,
-);
-
-DROP TABLE IF EXISTS  app_has_auth;
-CREATE TABLE  app_has_auth
-(
-    app     text,
-    auth    text,
-    uid     text,
-    PRIMARY KEY (app, auth)
-);
-
 DROP TABLE IF EXISTS endpoint;
 CREATE TABLE  endpoint
 (
