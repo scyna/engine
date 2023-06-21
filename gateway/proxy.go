@@ -1,42 +1,34 @@
-package proxy
+package gateway
 
 import (
 	"bytes"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
 
-	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
-	scyna_const "github.com/scyna/core/const"
 	scyna_utils "github.com/scyna/core/utils"
 	"google.golang.org/protobuf/proto"
 )
 
-type Proxy struct {
+type Gateway struct {
 	Queries  QueryPool
-	Clients  map[string]Client
 	Contexts scyna_utils.HttpContextPool
 }
 
-func NewProxy() *Proxy {
-	ret := &Proxy{
+func NewGateway() *Gateway {
+	ret := &Gateway{
 		Queries:  NewQueryPool(),
 		Contexts: scyna_utils.NewContextPool(),
 	}
-	ret.initClients()
 	return ret
 }
 
-func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+func (proxy *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	callID := scyna.ID.Next()
 
 	/*authenticate*/
 	url := req.URL.String()
-	clientID := req.Header.Get("Client-Id")
-	clientSecret := req.Header.Get("Client-Secret")
-	client, ok := proxy.Clients[clientID]
 	contentType := req.Header.Get("Content-Type")
 
 	//https://descynaper.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
@@ -59,33 +51,12 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		Time:      time.Now(),
 		Path:      url,
 		Type:      scyna.TRACE_ENDPOINT,
-		Source:    clientID,
 		SessionID: scyna.Session.ID(),
 	}
 	defer saveTrace(trace)
 
 	ctx := proxy.Contexts.GetContext()
 	defer proxy.Contexts.PutContext(ctx)
-
-	if !ok || clientSecret != client.Secret {
-		http.Error(rw, "Unauthorized", http.StatusUnauthorized)
-		scyna.Session.Info("Wrong client id or secret: " + clientID + ", secret:" + clientSecret)
-		trace.Status = http.StatusUnauthorized
-		return
-	}
-
-	if err := qb.Select(scyna_const.CLIENT_USE_ENDPOINT_TABLE).
-		Columns("url").
-		Where(qb.Eq("client"), qb.Eq("url")).
-		Limit(1).
-		Query(scyna.DB).
-		Bind(clientID, url).
-		GetRelease(&url); err != nil {
-		http.Error(rw, "Unauthorized", http.StatusUnauthorized)
-		scyna.Session.Info(fmt.Sprintf("Wrong url: %s, error = %s\n", url, err.Error()))
-		trace.Status = http.StatusUnauthorized
-		return
-	}
 
 	if contentType == "application/json" {
 		ctx.Request.JSON = true

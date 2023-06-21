@@ -31,8 +31,8 @@ CREATE TABLE  application
 DROP TABLE IF EXISTS  client_use_endpoint;
 CREATE TABLE  client_use_endpoint
 (
-    client      text,   /*client id*/  
-    url         text,   /*endpoint path*/
+    client      text,   
+    url         text,   
     PRIMARY KEY (client, url)
 );
 

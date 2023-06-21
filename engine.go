@@ -11,7 +11,6 @@ import (
 	scyna_proto "github.com/scyna/core/proto/generated"
 
 	"github.com/scyna/go/engine/gateway"
-	"github.com/scyna/go/engine/manager/authentication"
 	"github.com/scyna/go/engine/manager/generator"
 	"github.com/scyna/go/engine/manager/logging"
 	"github.com/scyna/go/engine/manager/scheduler"
@@ -76,19 +75,9 @@ func main() {
 	scyna.RegisterEndpoint(scyna_const.SETTING_WRITE_URL, setting.Write)
 	scyna.RegisterEndpoint(scyna_const.SETTING_REMOVE_URL, setting.Remove)
 
-	/*authentication*/
-	scyna.RegisterEndpoint(scyna_const.AUTH_CREATE_URL, authentication.Create)
-	scyna.RegisterEndpoint(scyna_const.AUTH_GET_URL, authentication.Get)
-	scyna.RegisterEndpoint(scyna_const.AUTH_LOGOUT_URL, authentication.Logout)
-
 	/* task */
 	scyna.RegisterEndpoint(scyna_const.START_TASK_URL, scheduler.StartTask)
 	scyna.RegisterEndpoint(scyna_const.STOP_TASK_URL, scheduler.StopTask)
-
-	/* admin */
-	//scyna.RegisterEndpoint(admin.CREATE_CLIENT_URL, admin.CreateClientHandler)
-	//scyna.RegisterEndpoint(admin.CREATE_CONTEXT_URL, admin.CreateContextHandler)
-	//scyna.RegisterEndpoint(admin.CREATE_ENDPOINT_URL, admin.CreateEndpointHandler)
 
 	/* Update config */
 	setting.UpdateDefaultConfig(&config)
