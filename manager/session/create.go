@@ -10,7 +10,7 @@ import (
 	scyna "github.com/scyna/core"
 	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
-	"github.com/scyna/go/engine/manager/manager"
+	"github.com/scyna/engine/manager/manager"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )

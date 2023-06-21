@@ -9,15 +9,14 @@ import (
 	scyna "github.com/scyna/core"
 	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
-
-	"github.com/scyna/go/engine/gateway"
-	"github.com/scyna/go/engine/manager/generator"
-	"github.com/scyna/go/engine/manager/logging"
-	"github.com/scyna/go/engine/manager/scheduler"
-	"github.com/scyna/go/engine/manager/session"
-	"github.com/scyna/go/engine/manager/setting"
-	"github.com/scyna/go/engine/manager/trace"
-	"github.com/scyna/go/engine/proxy"
+	"github.com/scyna/engine/gateway"
+	"github.com/scyna/engine/manager/generator"
+	"github.com/scyna/engine/manager/logging"
+	"github.com/scyna/engine/manager/scheduler"
+	"github.com/scyna/engine/manager/session"
+	"github.com/scyna/engine/manager/setting"
+	"github.com/scyna/engine/manager/trace"
+	"github.com/scyna/engine/proxy"
 )
 
 const MODULE_CODE = "scyna_engine"
