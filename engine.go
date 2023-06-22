@@ -9,7 +9,7 @@ import (
 	scyna "github.com/scyna/core"
 	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
-	"github.com/scyna/engine/gateway"
+	"github.com/scyna/engine/gateway-no-auth"
 	"github.com/scyna/engine/manager/generator"
 	"github.com/scyna/engine/manager/logging"
 	"github.com/scyna/engine/manager/scheduler"
