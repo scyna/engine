@@ -89,11 +89,13 @@ func main() {
 		*certificateKey = DEFAULT_CERT_KEY
 	}
 
+	scyna.RegisterEndpoint(gateway.ADD_PUBLIC_ENDPOINT_URL, gateway.AddPublicEndpoint)
+	scyna.RegisterEndpoint(gateway.REMOVE_PUBLIC_ENDPOINT_URL, gateway.RemovePublicEndpoint)
+
 	go func() {
 		gateway_ := gateway.NewGateway()
 		log.Println("Scyna Gateway Start with port " + *gatewayPort)
-		http.HandleFunc(gateway.ADD_PUBLIC_ENDPOINT_URL, gateway.AddPublicEndpoint)
-		http.HandleFunc(gateway.REMOVE_PUBLIC_ENDPOINT_URL, gateway.RemovePublicEndpoint)
+
 		if *certificateEnable {
 			if err := http.ListenAndServeTLS(":"+*gatewayPort, *certificateFile, *certificateKey, gateway_); err != nil {
 				log.Println("Gateway: " + err.Error())

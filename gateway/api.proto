@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package gateway;
+option  go_package = "./;gateway";
+option  optimize_for = CODE_SIZE;
+
+message AddPublicEndpointRequest {
+    string url = 1;
+}
+
+message RemovePublicEndpointRequest {
+    string url = 1;
+}

@@ -1,19 +1,13 @@
 package gateway
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
 
 	"github.com/nats-io/nats.go"
 	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
 	scyna_const "github.com/scyna/core/const"
-	scyna_proto "github.com/scyna/core/proto/generated"
-	"google.golang.org/protobuf/proto"
 )
 
 const PUBLIC_ENDPOINT_UPDATE_CHANNEL = scyna_const.KEYSPACE + ".public_endpoint.update"
@@ -53,24 +47,8 @@ func (gateway *Gateway) isPublicEndpoint(url string) bool {
 	return false
 }
 
-type RequestPublicEndpoint struct {
-	Url string `json:"url"`
-}
-
-func AddPublicEndpoint(w http.ResponseWriter, r *http.Request) {
+func AddPublicEndpoint(ctx *scyna.Endpoint, request *AddPublicEndpointRequest) scyna.Error {
 	log.Println("Receive AddPublicEndpoint")
-
-	buf, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, "Bad Request", http.StatusBadRequest)
-		return
-	}
-
-	var request RequestPublicEndpoint
-	if err := json.Unmarshal(buf, &request); err != nil {
-		http.Error(w, "Bad Request", http.StatusBadRequest)
-		return
-	}
 
 	if err := qb.Insert(PUBLIC_ENDPOINT_TABLE).
 		Columns("url").
@@ -78,37 +56,14 @@ func AddPublicEndpoint(w http.ResponseWriter, r *http.Request) {
 		Bind(request.Url).
 		ExecRelease(); err != nil {
 		log.Println(err)
-		http.Error(w, "Server Error", 400)
+		return scyna.SERVER_ERROR
 	}
 	scyna.Connection.Publish(PUBLIC_ENDPOINT_UPDATE_CHANNEL, nil)
-	response := scyna_proto.Response{
-		Code: 200,
-	}
-	if data, err := proto.Marshal(&response); err == nil {
-		w.WriteHeader(200)
-		_, err = bytes.NewBuffer(data).WriteTo(w)
-		if err != nil {
-			log.Println("Proxy write data error: " + err.Error())
-		}
-	} else {
-		http.Error(w, "Server Error", 400)
-	}
+	return scyna.OK
 }
 
-func RemovePublicEndpoint(w http.ResponseWriter, r *http.Request) {
+func RemovePublicEndpoint(ctx *scyna.Endpoint, request *AddPublicEndpointRequest) scyna.Error {
 	log.Println("Receive RemovePublicEndpoint")
-
-	buf, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, "Bad Request", http.StatusBadRequest)
-		return
-	}
-
-	var request RequestPublicEndpoint
-	if err := json.Unmarshal(buf, &request); err != nil {
-		http.Error(w, "Bad Request", http.StatusBadRequest)
-		return
-	}
 
 	if err := qb.Delete(PUBLIC_ENDPOINT_TABLE).
 		Where(qb.Eq("url")).
@@ -116,22 +71,9 @@ func RemovePublicEndpoint(w http.ResponseWriter, r *http.Request) {
 		Bind(request.Url).
 		ExecRelease(); err != nil {
 		log.Println(err)
-		http.Error(w, "Server Error", 400)
+		return scyna.SERVER_ERROR
 	}
 
 	scyna.Connection.Publish(PUBLIC_ENDPOINT_UPDATE_CHANNEL, nil)
-
-	response := scyna_proto.Response{
-		Code: 200,
-	}
-	if data, err := proto.Marshal(&response); err == nil {
-		w.WriteHeader(200)
-		_, err = bytes.NewBuffer(data).WriteTo(w)
-		if err != nil {
-			log.Println("Proxy write data error: " + err.Error())
-		}
-	} else {
-		http.Error(w, "Server Error", 400)
-	}
-
+	return scyna.OK
 }
