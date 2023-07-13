@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"bytes"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -42,10 +43,24 @@ func (proxy *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		}
 	}
 
+	log.Println("Request: ", url, req.Header.Get("Origin"))
+
+	//Accept preflight request
+	if req.Method == "OPTIONS" {
+		rw.Header().Set("Access-Control-Allow-Origin", "*")
+		rw.Header().Set("Access-Control-Allow-Credentials", "true")
+		rw.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		rw.Header().Set("Access-Control-Allow-Methods", "POST")
+		rw.WriteHeader(http.StatusOK)
+		return
+	}
+
 	/*CORS*/
-	rw.Header().Set("Content-Type", contentType)
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	rw.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	rw.Header().Set("Access-Control-Allow-Credentials", "true")
+	rw.Header().Set("Access-Control-Allow-Headers", "Content-Type, access-control-allow-origin, access-control-allow-headers")
+	rw.Header().Set("Access-Control-Allow-Methods", "POST")
+	rw.Header().Set("Content-Type", req.Header.Get("Content-Type"))
 
 	trace := scyna.Trace{
 		ID:        callID,

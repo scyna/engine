@@ -2,6 +2,7 @@ package scheduler
 
 import (
 	"errors"
+	"log"
 	"math"
 	"time"
 
@@ -13,6 +14,9 @@ import (
 )
 
 func StartTask(ctx *scyna.Endpoint, request *scyna_proto.StartTaskRequest) scyna.Error {
+
+	log.Println("Receive StartTaskRequest")
+
 	if err := validateStartTaskRequest(request); err != nil {
 		ctx.Error(err.Error())
 		return scyna.REQUEST_INVALID
@@ -28,7 +32,7 @@ func StartTask(ctx *scyna.Endpoint, request *scyna_proto.StartTaskRequest) scyna
 	taskID := scyna.ID.Next()
 	start := time.Unix(request.Time, 0)
 	qBatch := scyna.DB.NewBatch(gocql.LoggedBatch)
-	qBatch.Query("INSERT INTO "+scyna_const.TASK_TABLE+"cyna.task(id, topic, data, start, next, interval, loop_count, loop_index, done) "+
+	qBatch.Query("INSERT INTO "+scyna_const.TASK_TABLE+"(id, topic, data, start, next, interval, loop_count, loop_index, done) "+
 		"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
 		taskID, request.Topic, request.Data, start, start, request.Interval, request.Loop, 0, false)
 

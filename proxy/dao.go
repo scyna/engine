@@ -25,7 +25,7 @@ func saveTrace(trace scyna.Trace) {
 		trace.Source,
 		trace.Status,
 	)
-	qBatch.Query("INSERT INTO "+scyna_const.CLIENT_HAS_TRACE_TABLE+"(app_code, trace_id, day) VALUES (?,?,?)",
+	qBatch.Query("INSERT INTO "+scyna_const.CLIENT_HAS_TRACE_TABLE+"(client_id, trace_id, day) VALUES (?,?,?)",
 		trace.Source,
 		trace.ID,
 		day,
