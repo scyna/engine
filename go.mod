@@ -9,7 +9,7 @@ require (
 	github.com/gocql/gocql v1.0.0
 	github.com/nats-io/nats.go v1.23.0
 	github.com/scylladb/gocqlx/v2 v2.7.0
-	github.com/scyna/core v1.2.7
+	github.com/scyna/core v1.2.8
 	google.golang.org/protobuf v1.28.0
 )
 
@@ -17,6 +17,7 @@ require github.com/nats-io/nats-server/v2 v2.9.14 // indirect
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
+	github.com/aws/aws-sigv4-auth-cassandra-gocql-driver-plugin v0.0.0-20220331165046-e4d000c0d6a6 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect

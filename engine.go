@@ -29,10 +29,14 @@ func main() {
 	natsUrl := flag.String("nats_url", "127.0.0.1", "Nats URL")
 	natsUsername := flag.String("nats_username", "", "Nats Username")
 	natsPassword := flag.String("nats_password", "", "Nats Password")
+
 	dbHost := flag.String("db_host", "127.0.0.1", "DB Host")
 	dbUsername := flag.String("db_username", "", "DB Username")
 	dbPassword := flag.String("db_password", "", "DB Password")
 	dbLocation := flag.String("db_location", "", "DB Location")
+	dbPemFile := flag.String("db_pem_file", "", "DB Pem File")
+	dbisAWSKeyspaces := flag.Bool("db_is_aws_keyspaces", false, "DB is AWS Keyspaces")
+
 	secret := flag.String("secret", "123456", "scyna Manager Secret")
 
 	certificateEnable := flag.Bool("certificateEnable", false, "Certificate Key")
@@ -41,13 +45,15 @@ func main() {
 
 	flag.Parse()
 	config := scyna_proto.Configuration{
-		NatsUrl:      *natsUrl,
-		NatsUsername: *natsUsername,
-		NatsPassword: *natsPassword,
-		DBHost:       *dbHost,
-		DBUsername:   *dbUsername,
-		DBPassword:   *dbPassword,
-		DBLocation:   *dbLocation,
+		NatsUrl:        *natsUrl,
+		NatsUsername:   *natsUsername,
+		NatsPassword:   *natsPassword,
+		DBHost:         *dbHost,
+		DBUsername:     *dbUsername,
+		DBPassword:     *dbPassword,
+		DBLocation:     *dbLocation,
+		DBPemFile:      *dbPemFile,
+		IsAWSKeyspaces: *dbisAWSKeyspaces,
 	}
 
 	/* Init module */

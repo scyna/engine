@@ -21,6 +21,7 @@ ENV MANAGER_PORT=6081 \
     DB_USERNAME="" \
     DB_PASSWORD="" \
     DB_LOCATION="" \
+    DB_PEM_FILE="" \
     CERTIFICATE_FILE="/cert/localhost.crt" \
     CERTIFICATE_KEY="/cert/localhost.key" \
     CERTIFICATE_ENABLE=false
@@ -37,6 +38,7 @@ CMD /application \
     --db_username=${DB_USERNAME} \
     --db_password=${DB_PASSWORD} \
     --db_location=${DB_LOCATION} \
+    --db_pem_file=${DB_PEM_FILE} \
     --certificateFile=${CERTIFICATE_FILE} \
     --certificateKey=${CERTIFICATE_KEY} \
     -certificateEnable=${CERTIFICATE_ENABLE}
