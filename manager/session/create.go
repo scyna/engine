@@ -46,7 +46,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 			Query(scyna.DB).
 			Bind(request.Module, scyna_const.SETTING_KEY).
 			GetRelease(&value); err != nil {
-			log.Println("Can not find module config for module " + request.Module + " - " + err.Error())
+			//log.Println("Can not find module config for module " + request.Module + " - " + err.Error())
 		}
 
 		if len(value) > 0 {
