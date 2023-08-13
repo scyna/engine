@@ -29,7 +29,7 @@ func newSession(module string, secret string) (uint64, scyna.Error) {
 		// 	Bind(module).
 		// 	GetRelease(&secret_); err != nil {
 		log.Print("Module not existed: ", err.Error())
-		return 0, scyna.MODULE_NOT_EXISTED
+		return 0, scyna.MODULE_NOT_EXISTS
 	}
 
 	if secret != secret_ {
