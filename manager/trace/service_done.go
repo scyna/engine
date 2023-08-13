@@ -8,8 +8,8 @@ import (
 )
 
 func ServiceDone(signal *scyna_proto.EndpointDoneSignal) {
-	batch := scyna.DB.NewBatch(gocql.UnloggedBatch)
+	batch := scyna.DB.Session.NewBatch(gocql.UnloggedBatch)
 	batch.Query("INSERT INTO "+scyna_const.TAG_TABLE+"(trace_id, key, value) VALUES(?,?,?)", signal.TraceID, "request", signal.Request)
 	batch.Query("INSERT INTO "+scyna_const.TAG_TABLE+"(trace_id, key, value) VALUES(?,?,?)", signal.TraceID, "response", signal.Response)
-	scyna.DB.ExecuteBatch(batch)
+	scyna.DB.Session.ExecuteBatch(batch)
 }

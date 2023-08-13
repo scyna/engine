@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/nats-io/nats.go"
-	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
 	scyna_const "github.com/scyna/core/const"
 )
@@ -16,7 +15,7 @@ type Client struct {
 
 func (proxy *Proxy) initClients() {
 	proxy.Clients = proxy.loadClients()
-	_, err := scyna.Connection.Subscribe(scyna_const.CLIENT_UPDATE_CHANNEL, func(msg *nats.Msg) {
+	_, err := scyna.Nats.Subscribe(scyna_const.CLIENT_UPDATE_CHANNEL, func(msg *nats.Msg) {
 		scyna.Session.Info("Reload Clients")
 		proxy.Clients = proxy.loadClients()
 	})
@@ -27,17 +26,15 @@ func (proxy *Proxy) initClients() {
 
 func (proxy *Proxy) loadClients() map[string]Client {
 	ret := make(map[string]Client)
-	var clients []Client
 
-	if err := qb.Select(scyna_const.CLIENT_TABLE).
-		Columns("id", "secret").
-		Query(scyna.DB).
-		SelectRelease(&clients); err == nil {
-		for _, c := range clients {
-			ret[c.ID] = c
+	scanner := scyna.DB.QueryMany("SELECT id, secret FROM client")
+	for scanner.Next() {
+		var client Client
+		if err := scanner.Scan(&client.ID, &client.Secret); err != nil {
+			scyna.Session.Error("Load Clients fail: " + err.Error())
 		}
-	} else {
-		scyna.Session.Error("Load Clients fail: " + err.Error())
+		ret[client.ID] = client
 	}
+
 	return ret
 }

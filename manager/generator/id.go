@@ -4,7 +4,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
 	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
@@ -42,35 +41,34 @@ func allocate() (ok bool, prefix uint32, start uint64, end uint64) {
 	ok = false
 
 	seed := 0
-	if err := qb.Select(scyna_const.GEN_ID_TABLE).
-		Columns("seed").
-		Where(qb.Eq("prefix")).
-		Limit(1).
-		Query(scyna.DB).
-		Bind(p).
-		GetRelease(&seed); err == nil {
+	if err := scyna.DB.QueryOne("SELECT seed FROM "+scyna_const.GEN_ID_TABLE+
+		" WHERE prefix = ?", p).Scan(&seed); err == nil {
+		// if err := qb.Select(scyna_const.GEN_ID_TABLE).
+		// 	Columns("seed").
+		// 	Where(qb.Eq("prefix")).
+		// 	Limit(1).
+		// 	Query(scyna.DB).
+		// 	Bind(p).
+		// 	GetRelease(&seed); err == nil {
 		seed += idPartitionSize
 	} else {
 		log.Println("generator.allocate: get seed: " + err.Error())
 	}
 
-	if applied, err := qb.Insert(scyna_const.GEN_ID_TABLE).
-		Columns("prefix", "seed").
-		Unique().
-		Query(scyna.DB).
-		Bind(p, seed).
-		ExecCASRelease(); applied {
+	if err := scyna.DB.Execute("INSERT INTO "+scyna_const.GEN_ID_TABLE+
+		" (prefix, seed) VALUES (?, ?) IF NOT EXISTS", p, seed); err == nil {
+		// if applied, err := qb.Insert(scyna_const.GEN_ID_TABLE).
+		// 	Columns("prefix", "seed").
+		// 	Unique().
+		// 	Query(scyna.DB).
+		// 	Bind(p, seed).
+		// 	ExecCASRelease(); applied {
+		ok = true
 		prefix = uint32(p)
 		start = uint64(seed) + 1
 		end = uint64(seed) + idPartitionSize
-		ok = true
-		return
 	} else {
-		if err != nil {
-			log.Println("generator.allocate: insert: " + err.Error())
-		} else {
-			log.Println("generator.allocate: cannot insert ")
-		}
+		log.Println("generator.allocate: insert: " + err.Error())
 	}
 	return
 }

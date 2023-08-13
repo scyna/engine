@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
 	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
@@ -39,14 +38,16 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		response.SessionID = sid
 
 		var value string
-		if err := qb.Select(scyna_const.SETTING_TABLE).
-			Columns("value").
-			Where(qb.Eq("module"), qb.Eq("key")).
-			Limit(1).
-			Query(scyna.DB).
-			Bind(request.Module, scyna_const.SETTING_KEY).
-			GetRelease(&value); err != nil {
-			//log.Println("Can not find module config for module " + request.Module + " - " + err.Error())
+		if err := scyna.DB.QueryOne("SELECT value FROM "+scyna_const.SETTING_TABLE+
+			" WHERE module = ? AND key = ?", request.Module, scyna_const.SETTING_KEY).Scan(&value); err != nil {
+			// if err := qb.Select(scyna_const.SETTING_TABLE).
+			// 	Columns("value").
+			// 	Where(qb.Eq("module"), qb.Eq("key")).
+			// 	Limit(1).
+			// 	Query(scyna.DB).
+			// 	Bind(request.Module, scyna_const.SETTING_KEY).
+			// 	GetRelease(&value); err != nil {
+			log.Println("No configuration for module " + request.Module)
 		}
 
 		if len(value) > 0 {

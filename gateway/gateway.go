@@ -13,16 +13,12 @@ import (
 )
 
 type Gateway struct {
-	Queries         QueryPool
 	Contexts        scyna_utils.HttpContextPool
 	PublicEndpoints []string
 }
 
 func NewGateway() *Gateway {
-	ret := &Gateway{
-		Queries:  NewQueryPool(),
-		Contexts: scyna_utils.NewContextPool(),
-	}
+	ret := &Gateway{Contexts: scyna_utils.NewContextPool()}
 	ret.initPublicEndpoints()
 	return ret
 }
@@ -111,7 +107,7 @@ func (proxy *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	/*post request to message queue*/
-	msg, respErr := scyna.Connection.Request(scyna_utils.PublishURL(url), reqBytes, 60*time.Second)
+	msg, respErr := scyna.Nats.Request(scyna_utils.PublishURL(url), reqBytes, 60*time.Second)
 	if respErr != nil {
 		http.Error(rw, "No response", http.StatusInternalServerError)
 		trace.Status = http.StatusInternalServerError

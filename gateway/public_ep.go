@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/nats-io/nats.go"
-	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
 	scyna_const "github.com/scyna/core/const"
 )
@@ -17,7 +16,7 @@ const REMOVE_PUBLIC_ENDPOINT_URL = scyna_const.BASEPATH + "/gateway/public-endpo
 
 func (gateway *Gateway) initPublicEndpoints() {
 	gateway.PublicEndpoints = gateway.loadPublicEndPoints()
-	_, err := scyna.Connection.Subscribe(PUBLIC_ENDPOINT_UPDATE_CHANNEL, func(msg *nats.Msg) {
+	_, err := scyna.Nats.Subscribe(PUBLIC_ENDPOINT_UPDATE_CHANNEL, func(msg *nats.Msg) {
 		scyna.Session.Info("Reload Publics Endpoints")
 		gateway.PublicEndpoints = gateway.loadPublicEndPoints()
 	})
@@ -28,13 +27,18 @@ func (gateway *Gateway) initPublicEndpoints() {
 
 func (gateway *Gateway) loadPublicEndPoints() []string {
 	var ret []string
-	if err := qb.Select(PUBLIC_ENDPOINT_TABLE).
-		Columns("url").
-		Query(scyna.DB).
-		SelectRelease(&ret); err == nil {
-	} else {
-		scyna.Session.Error("Load Public Endpoints fail: " + err.Error())
+
+	scanners := scyna.DB.QueryMany("SELECT url FROM " + PUBLIC_ENDPOINT_TABLE)
+
+	for scanners.Next() {
+		var url string
+		if err := scanners.Scan(&url); err != nil {
+			scyna.Session.Error("Load Public Endpoints fail: " + err.Error())
+		} else {
+			ret = append(ret, url)
+		}
 	}
+
 	return ret
 }
 
@@ -50,30 +54,33 @@ func (gateway *Gateway) isPublicEndpoint(url string) bool {
 func AddPublicEndpoint(ctx *scyna.Endpoint, request *AddPublicEndpointRequest) scyna.Error {
 	log.Println("Receive AddPublicEndpoint")
 
-	if err := qb.Insert(PUBLIC_ENDPOINT_TABLE).
-		Columns("url").
-		Query(scyna.DB).
-		Bind(request.Url).
-		ExecRelease(); err != nil {
+	if err := scyna.DB.Execute("INSERT INTO "+PUBLIC_ENDPOINT_TABLE+" (url) VALUES (?)", request.Url); err != nil {
+		// if err := qb.Insert(PUBLIC_ENDPOINT_TABLE).
+		// 	Columns("url").
+		// 	Query(scyna.DB).
+		// 	Bind(request.Url).
+		// 	ExecRelease(); err != nil {
 		log.Println(err)
 		return scyna.SERVER_ERROR
 	}
-	scyna.Connection.Publish(PUBLIC_ENDPOINT_UPDATE_CHANNEL, nil)
+
+	scyna.Nats.Publish(PUBLIC_ENDPOINT_UPDATE_CHANNEL, nil)
 	return scyna.OK
 }
 
 func RemovePublicEndpoint(ctx *scyna.Endpoint, request *AddPublicEndpointRequest) scyna.Error {
 	log.Println("Receive RemovePublicEndpoint")
 
-	if err := qb.Delete(PUBLIC_ENDPOINT_TABLE).
-		Where(qb.Eq("url")).
-		Query(scyna.DB).
-		Bind(request.Url).
-		ExecRelease(); err != nil {
+	if err := scyna.DB.Execute("DELETE FROM "+PUBLIC_ENDPOINT_TABLE+" WHERE url = ?", request.Url); err != nil {
+		// if err := qb.Delete(PUBLIC_ENDPOINT_TABLE).
+		// 	Where(qb.Eq("url")).
+		// 	Query(scyna.DB).
+		// 	Bind(request.Url).
+		// 	ExecRelease(); err != nil {
 		log.Println(err)
 		return scyna.SERVER_ERROR
 	}
 
-	scyna.Connection.Publish(PUBLIC_ENDPOINT_UPDATE_CHANNEL, nil)
+	scyna.Nats.Publish(PUBLIC_ENDPOINT_UPDATE_CHANNEL, nil)
 	return scyna.OK
 }

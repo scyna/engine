@@ -7,24 +7,18 @@ import (
 	"strings"
 	"time"
 
-	"github.com/scylladb/gocqlx/v2/qb"
 	scyna "github.com/scyna/core"
-	scyna_const "github.com/scyna/core/const"
 	scyna_utils "github.com/scyna/core/utils"
 	"google.golang.org/protobuf/proto"
 )
 
 type Proxy struct {
-	Queries  QueryPool
 	Clients  map[string]Client
 	Contexts scyna_utils.HttpContextPool
 }
 
 func NewProxy() *Proxy {
-	ret := &Proxy{
-		Queries:  NewQueryPool(),
-		Contexts: scyna_utils.NewContextPool(),
-	}
+	ret := &Proxy{Contexts: scyna_utils.NewContextPool()}
 	ret.initClients()
 	return ret
 }
@@ -74,13 +68,14 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if err := qb.Select(scyna_const.CLIENT_USE_ENDPOINT_TABLE).
-		Columns("url").
-		Where(qb.Eq("client"), qb.Eq("url")).
-		Limit(1).
-		Query(scyna.DB).
-		Bind(clientID, url).
-		GetRelease(&url); err != nil {
+	if err := scyna.DB.QueryOne("SELECT url FROM client_use_endpoint WHERE client=? AND url=?", clientID, url).Scan(&url); err != nil {
+		// if err := qb.Select(scyna_const.CLIENT_USE_ENDPOINT_TABLE).
+		// 	Columns("url").
+		// 	Where(qb.Eq("client"), qb.Eq("url")).
+		// 	Limit(1).
+		// 	Query(scyna.DB).
+		// 	Bind(clientID, url).
+		// 	GetRelease(&url); err != nil {
 		http.Error(rw, "Unauthorized", http.StatusUnauthorized)
 		scyna.Session.Info(fmt.Sprintf("Wrong url: %s, error = %s\n", url, err.Error()))
 		trace.Status = http.StatusUnauthorized
@@ -116,7 +111,7 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	/*post request to message queue*/
-	msg, respErr := scyna.Connection.Request(scyna_utils.PublishURL(url), reqBytes, 60*time.Second)
+	msg, respErr := scyna.Nats.Request(scyna_utils.PublishURL(url), reqBytes, 60*time.Second)
 	if respErr != nil {
 		http.Error(rw, "No response", http.StatusInternalServerError)
 		trace.Status = http.StatusInternalServerError

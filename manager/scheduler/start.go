@@ -31,7 +31,7 @@ func StartTask(ctx *scyna.Endpoint, request *scyna_proto.StartTaskRequest) scyna
 	// Insert new task to scyna.task table
 	taskID := scyna.ID.Next()
 	start := time.Unix(request.Time, 0)
-	qBatch := scyna.DB.NewBatch(gocql.LoggedBatch)
+	qBatch := scyna.DB.Session.NewBatch(gocql.LoggedBatch)
 	qBatch.Query("INSERT INTO "+scyna_const.TASK_TABLE+"(id, topic, data, start, next, interval, loop_count, loop_index, done) "+
 		"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
 		taskID, request.Topic, request.Data, start, start, request.Interval, request.Loop, 0, false)
@@ -40,7 +40,7 @@ func StartTask(ctx *scyna.Endpoint, request *scyna_proto.StartTaskRequest) scyna
 
 	bucket := GetBucket(start) // Generate period id
 	qBatch.Query("INSERT INTO "+scyna_const.TODO_TABLE+"(bucket, task_id) VALUES (?, ?);", bucket, taskID)
-	if err := scyna.DB.ExecuteBatch(qBatch); err != nil {
+	if err := scyna.DB.Session.ExecuteBatch(qBatch); err != nil {
 		ctx.Error(err.Error())
 		return scyna.REQUEST_INVALID
 	}

@@ -10,10 +10,9 @@ import (
 )
 
 func saveTrace(trace scyna.Trace) {
-
 	day := scyna_utils.GetDayByTime(time.Now())
 	trace.Duration = uint64(time.Now().UnixNano() - trace.Time.UnixNano())
-	qBatch := scyna.DB.NewBatch(gocql.LoggedBatch)
+	qBatch := scyna.DB.Session.NewBatch(gocql.LoggedBatch)
 	qBatch.Query("INSERT INTO "+scyna_const.TRACE_TABLE+"(type, path, day, id, time, duration, session_id, source, status) VALUES (?,?,?,?,?,?,?,?,?)",
 		trace.Type,
 		trace.Path,
@@ -30,7 +29,7 @@ func saveTrace(trace scyna.Trace) {
 		trace.ID,
 		day,
 	)
-	if err := scyna.DB.ExecuteBatch(qBatch); err != nil {
+	if err := scyna.DB.Session.ExecuteBatch(qBatch); err != nil {
 		scyna.Session.Error("Can not save trace - " + err.Error())
 	}
 }
