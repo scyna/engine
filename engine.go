@@ -111,7 +111,7 @@ func main() {
 	/*session*/
 	scyna.RegisterSignal(scyna_const.SESSION_END_CHANNEL, session.End)
 	scyna.RegisterSignal(scyna_const.SESSION_UPDATE_CHANNEL, session.Update)
-	http.HandleFunc(scyna_const.SESSION_CREATE_URL, session.Create)
+	http.HandleFunc(scyna_const.SESSION_CREATE_URL, session.CreateSessionHandler)
 	log.Println("Scyna Manager Start with port " + *managerPort)
 	if *certificateEnable && *certificateFile != "" {
 		if err := http.ListenAndServeTLS(":"+*managerPort, *certificateFile, *certificateKey, nil); err != nil {

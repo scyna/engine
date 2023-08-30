@@ -23,7 +23,7 @@ var defaultConfig *scyna_proto.Configuration = &scyna_proto.Configuration{
 	DBLocation:   "",
 }
 
-func Create(w http.ResponseWriter, r *http.Request) {
+func CreateSessionHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Receive CreateSessionRequest")
 	buf, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -36,6 +36,9 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
+
+	log.Println("Create session for module: " + request.Module)
+	log.Println("Secret: " + request.Secret)
 
 	if sid, err := newSession(request.Module, request.Secret); err == scyna.OK {
 		var response scyna_proto.CreateSessionResponse
