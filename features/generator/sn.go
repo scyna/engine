@@ -32,7 +32,6 @@ func nextBucket(key string) *scyna_proto.GetSNResponse {
 		seed += snPartitionSize
 	} else {
 		log.Print("nextBucket:", err)
-		return nil
 	}
 
 	if err := scyna.DB.Execute("INSERT INTO "+scyna_const.GEN_SN_TABLE+"(key, prefix, seed) VALUES (?, ?, ?) IF NOT EXISTS",
