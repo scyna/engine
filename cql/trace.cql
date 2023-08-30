@@ -13,7 +13,7 @@ CREATE TABLE trace
     parent      bigint,
     status      int,
     PRIMARY KEY ((path,day), time, id)
-);
+) WITH CLUSTERING ORDER BY (time DESC);
 CREATE INDEX ON  trace(id);
 CREATE INDEX ON  trace(parent);
 
@@ -28,7 +28,7 @@ CREATE TABLE trace
     status      int,
     session     bigint,
     PRIMARY KEY (day, time, id)
-);
+) WITH CLUSTERING ORDER BY (time DESC);
 CREATE INDEX ON endpoint_trace(id);
 
 DROP TABLE IF EXISTS log;
@@ -41,5 +41,5 @@ CREATE TABLE log
     message      text,
     level        smallint,
     PRIMARY KEY (day, time, source, seq)
-);
+) WITH CLUSTERING ORDER BY (time DESC);
 CREATE INDEX ON log(source);
