@@ -9,11 +9,11 @@ import (
 	scyna "github.com/scyna/core"
 	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
-	"github.com/scyna/engine/manager/generator"
-	"github.com/scyna/engine/manager/scheduler"
-	"github.com/scyna/engine/manager/session"
-	"github.com/scyna/engine/manager/setting"
-	"github.com/scyna/engine/manager/trace"
+	"github.com/scyna/engine/features/generator"
+	"github.com/scyna/engine/features/scheduler"
+	"github.com/scyna/engine/features/session"
+	"github.com/scyna/engine/features/setting"
+	"github.com/scyna/engine/features/trace"
 	"github.com/scyna/engine/proxy"
 )
 
