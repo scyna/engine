@@ -18,7 +18,7 @@ CREATE INDEX ON  trace(id);
 CREATE INDEX ON  trace(parent);
 
 DROP TABLE IF EXISTS endpoint_trace;
-CREATE TABLE trace
+CREATE TABLE endpoint_trace
 (
     day         int,
     time        timestamp,
