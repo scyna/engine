@@ -65,11 +65,11 @@ func main() {
 	scyna.RegisterEndpoint(scyna_const.GEN_GET_SN_URL, generator.GetSN)
 
 	/*logging*/
-	scyna.RegisterSignal(scyna_const.LOG_CREATED_CHANNEL, trace.WriteLog)
+	scyna.RegisterSignal(scyna_const.LOG_CREATED_CHANNEL, trace.LogCreatedHandler)
 
 	/*trace*/
-	scyna.RegisterSignal(scyna_const.TRACE_CREATED_CHANNEL, trace.TraceCreated)
-	scyna.RegisterSignal(scyna_const.ENDPOINT_DONE_CHANNEL, trace.ServiceDone)
+	scyna.RegisterSignal(scyna_const.TRACE_CREATED_CHANNEL, trace.TraceCreatedHandler)
+	scyna.RegisterSignal(scyna_const.ENDPOINT_DONE_CHANNEL, trace.EndpointDoneHandler)
 
 	/*setting*/
 	scyna.RegisterEndpoint(scyna_const.SETTING_READ_URL, setting.Read)

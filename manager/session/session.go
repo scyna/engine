@@ -21,13 +21,6 @@ func newSession(module string, secret string) (uint64, scyna.Error) {
 	var secret_ string
 	if err := scyna.DB.QueryOne("SELECT secret FROM "+scyna_const.MODULE_TABLE+
 		" WHERE code = ?", module).Scan(&secret_); err != nil {
-		// if err := qb.Select(scyna_const.MODULE_TABLE).
-		// 	Columns("secret").
-		// 	Where(qb.Eq("code")).
-		// 	Limit(1).
-		// 	Query(scyna.DB).
-		// 	Bind(module).
-		// 	GetRelease(&secret_); err != nil {
 		log.Print("Module not existed: ", err.Error())
 		return 0, scyna.MODULE_NOT_EXISTS
 	}
@@ -41,13 +34,8 @@ func newSession(module string, secret string) (uint64, scyna.Error) {
 	now := time.Now()
 
 	if err := scyna.DB.Execute("INSERT INTO "+scyna_const.SESSION_TABLE+
-		" (id, module, start, last_update) VALUES (?, ?, ?, ?)",
+		" (id, module, started, updated) VALUES (?, ?, ?, ?)",
 		sid, module, now, now); err != nil {
-		// if err := qb.Insert(scyna_const.SESSION_TABLE).
-		// 	Columns("id", "module", "start", "last_update").
-		// 	Query(scyna.DB).
-		// 	Bind(sid, module, now, now).
-		// 	ExecRelease(); err != nil {
 		log.Print("Can not save session to database:", err)
 		return 0, scyna.SERVER_ERROR
 	}

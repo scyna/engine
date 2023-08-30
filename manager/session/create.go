@@ -2,7 +2,7 @@ package session
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 
@@ -25,7 +25,7 @@ var defaultConfig *scyna_proto.Configuration = &scyna_proto.Configuration{
 
 func Create(w http.ResponseWriter, r *http.Request) {
 	log.Println("Receive CreateSessionRequest")
-	buf, err := ioutil.ReadAll(r.Body)
+	buf, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
@@ -37,11 +37,6 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// if request.Module == manager.MODULE_CODE {
-	// 	http.Error(w, "Unauthorized", http.StatusUnauthorized)
-	// 	return
-	// }
-
 	if sid, err := newSession(request.Module, request.Secret); err == scyna.OK {
 		var response scyna_proto.CreateSessionResponse
 		response.SessionID = sid
@@ -49,14 +44,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		var value string
 		if err := scyna.DB.QueryOne("SELECT value FROM "+scyna_const.SETTING_TABLE+
 			" WHERE module = ? AND key = ?", request.Module, scyna_const.SETTING_KEY).Scan(&value); err != nil {
-			// if err := qb.Select(scyna_const.SETTING_TABLE).
-			// 	Columns("value").
-			// 	Where(qb.Eq("module"), qb.Eq("key")).
-			// 	Limit(1).
-			// 	Query(scyna.DB).
-			// 	Bind(request.Module, scyna_const.SETTING_KEY).
-			// 	GetRelease(&value); err != nil {
-			log.Println("No configuration for module " + request.Module)
+			log.Println("No configuration for module: " + request.Module + ", use default configuration")
 		}
 
 		if len(value) > 0 {

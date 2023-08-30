@@ -40,9 +40,6 @@ CREATE TABLE log
     seq          bigint,
     message      text,
     level        smallint,
-    file         text,
-    function     text,
-    line         int,
     PRIMARY KEY (day, time, source, seq)
 ) WITH CLUSTERING ORDER BY (time DESC);
 CREATE INDEX ON log(source);

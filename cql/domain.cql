@@ -32,6 +32,7 @@ CREATE TABLE  session
     started     timestamp,
     updated     timestamp,
     ended       timestamp,
+    exit_code   int,
     PRIMARY KEY (module, id) 
 );
 CREATE INDEX ON  session (id);

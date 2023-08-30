@@ -7,7 +7,7 @@ import (
 	scyna_proto "github.com/scyna/core/proto/generated"
 )
 
-func WriteLog(signal *scyna_proto.LogCreatedSignal) {
+func LogCreatedHandler(signal *scyna_proto.LogCreatedSignal) {
 	log.Print(signal.Text)
 	scyna.AddLog(scyna.LogData{
 		ID:       signal.ID,
