@@ -9,10 +9,19 @@ import (
 	scyna "github.com/scyna/core"
 	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
-	"github.com/scyna/engine/manager/manager"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
+
+var defaultConfig *scyna_proto.Configuration = &scyna_proto.Configuration{
+	NatsUrl:      "127.0.0.1",
+	NatsUsername: "",
+	NatsPassword: "",
+	DBHost:       "127.0.0.1",
+	DBUsername:   "",
+	DBPassword:   "",
+	DBLocation:   "",
+}
 
 func Create(w http.ResponseWriter, r *http.Request) {
 	log.Println("Receive CreateSessionRequest")
@@ -28,10 +37,10 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if request.Module == manager.MODULE_CODE {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
+	// if request.Module == manager.MODULE_CODE {
+	// 	http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	// 	return
+	// }
 
 	if sid, err := newSession(request.Module, request.Secret); err == scyna.OK {
 		var response scyna_proto.CreateSessionResponse
@@ -54,12 +63,12 @@ func Create(w http.ResponseWriter, r *http.Request) {
 			var config scyna_proto.Configuration
 			err := protojson.Unmarshal([]byte(value), &config)
 			if err != nil {
-				response.Config = manager.DefaultConfig
+				response.Config = defaultConfig
 			} else {
 				response.Config = &config
 			}
 		} else {
-			response.Config = manager.DefaultConfig
+			response.Config = defaultConfig
 		}
 
 		if data, err := proto.Marshal(&response); err == nil {
