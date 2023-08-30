@@ -1,55 +1,45 @@
 USE scyna2;
 
-DROP TABLE IF EXISTS  trace;
-CREATE TABLE  trace
+DROP TABLE IF EXISTS trace;
+CREATE TABLE trace
 (
     path        text,
     day         int,
-    id          bigint,
     time        timestamp,
+    id          bigint,
     type        smallint,
-    session_id  bigint,
+    session     bigint,
     duration    bigint,
-    parent_id   bigint,
-    source      text,
+    parent      bigint,
     status      int,
-    PRIMARY KEY ((path, day), id)
+    PRIMARY KEY ((path,day), time, id)
 );
 CREATE INDEX ON  trace(id);
+CREATE INDEX ON  trace(parent);
 
-DROP TABLE IF EXISTS  client_has_trace;
-CREATE TABLE  client_has_trace
+DROP TABLE IF EXISTS endpoint_trace;
+CREATE TABLE trace
 (
-    client_id     text,
-    trace_id     bigint,
     day         int,
-    PRIMARY KEY ((client_id,day), trace_id)
+    time        timestamp,
+    id          bigint,
+    request     text,
+    response    text,
+    status      int,
+    session     bigint,
+    PRIMARY KEY (day, time, id)
 );
+CREATE INDEX ON endpoint_trace(id);
 
-DROP TABLE IF EXISTS  span;
-CREATE TABLE  span
+DROP TABLE IF EXISTS log;
+CREATE TABLE log
 (
-    parent_id     bigint,
-    child_id     bigint,
-    PRIMARY KEY (parent_id, child_id)
-);
-
-DROP TABLE IF EXISTS  tag;
-CREATE TABLE  tag
-(
-    trace_id     bigint,
-    key          text,
-    value        text,
-    PRIMARY KEY (trace_id, key)
-);
-
-DROP TABLE IF EXISTS  log;
-CREATE TABLE  log
-(
-    trace_id     bigint,
-    seq          bigint,
+    day          int,
     time         timestamp,
+    source       bigint,  /*trace_id or session_id*/
+    seq          bigint,
     message      text,
-    level       smallint,
-    PRIMARY KEY (trace_id, seq)
+    level        smallint,
+    PRIMARY KEY (day, time, source, seq)
 );
+CREATE INDEX ON log(source);

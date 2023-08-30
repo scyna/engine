@@ -95,7 +95,6 @@ func (proxy *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		trace.Status = http.StatusInternalServerError
 		return
 	}
-	trace.RequestBody = string(ctx.Request.Body)
 	ctx.Request.TraceID = callID
 
 	/*serialize the request */
@@ -129,9 +128,6 @@ func (proxy *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		scyna.Session.Error("Proxy write data error: " + err.Error())
 		trace.Status = 0
 	}
-
-	trace.SessionID = ctx.Response.SessionID
-	trace.Status = ctx.Response.Code
 
 	if f, ok := rw.(http.Flusher); ok {
 		f.Flush()

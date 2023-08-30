@@ -29,27 +29,14 @@ func nextBucket(key string) *scyna_proto.GetSNResponse {
 
 	if err := scyna.DB.QueryOne("SELECT seed FROM "+scyna_const.GEN_SN_TABLE+
 		" WHERE key = ? AND prefix = ?", key, prefix).Scan(&seed); err == nil {
-		// if err := qb.Select(scyna_const.GEN_SN_TABLE).
-		// 	Columns("seed").
-		// 	Where(qb.Eq("key"), qb.Eq("prefix")).
-		// 	Limit(1).
-		// 	Query(scyna.DB).
-		// 	Bind(key, prefix).
-		// 	GetRelease(&seed); err == nil {
 		seed += snPartitionSize
 	} else {
 		log.Print("nextBucket:", err)
 		return nil
 	}
 
-	if err := scyna.DB.Execute("UPDATE "+scyna_const.GEN_SN_TABLE+
-		" SET key = ?, seed = ?, prefix = ? IF NOT EXISTS", key, seed, prefix); err == nil {
-		// if applied, err := qb.Insert(scyna_const.GEN_SN_TABLE).
-		// 	Columns("key", "prefix", "seed").
-		// 	Unique().
-		// 	Query(scyna.DB).
-		// 	Bind(key, prefix, seed).
-		// 	ExecCASRelease(); applied {
+	if err := scyna.DB.Execute("INSERT INTO "+scyna_const.GEN_SN_TABLE+"(key, prefix, seed) VALUES (?, ?, ?) IF NOT EXISTS",
+		key, prefix, seed); err == nil {
 		return &scyna_proto.GetSNResponse{
 			Prefix: uint32(prefix),
 			Start:  uint64(seed) + 1,

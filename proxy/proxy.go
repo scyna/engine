@@ -53,7 +53,6 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		Time:      time.Now(),
 		Path:      url,
 		Type:      scyna.TRACE_ENDPOINT,
-		Source:    clientID,
 		SessionID: scyna.Session.ID(),
 	}
 	defer saveTrace(trace)
@@ -99,7 +98,6 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		trace.Status = http.StatusInternalServerError
 		return
 	}
-	trace.RequestBody = string(ctx.Request.Body)
 	ctx.Request.TraceID = callID
 
 	/*serialize the request */
@@ -134,8 +132,7 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		trace.Status = 0
 	}
 
-	trace.SessionID = ctx.Response.SessionID
-	trace.Status = ctx.Response.Code
+	trace.Status = uint32(ctx.Response.Code)
 
 	if f, ok := rw.(http.Flusher); ok {
 		f.Flush()

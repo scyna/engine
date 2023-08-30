@@ -1,23 +1,23 @@
 USE scyna2;
 
-DROP TABLE IF EXISTS  todo;
-CREATE TABLE  todo
+DROP TABLE IF EXISTS todo;
+CREATE TABLE todo
 (
     bucket        bigint,
     task_id       bigint,
     PRIMARY KEY (bucket, task_id)
 );
 
-DROP TABLE IF EXISTS  doing;
-CREATE TABLE  doing
+DROP TABLE IF EXISTS doing;
+CREATE TABLE doing
 (
     bucket        bigint,
     task_id       bigint, 
     PRIMARY KEY (bucket, task_id)
 );
 
-DROP TABLE IF EXISTS  task;
-CREATE TABLE  task
+DROP TABLE IF EXISTS task;
+CREATE TABLE task
 (
     id           bigint PRIMARY KEY,
     topic        text,
@@ -30,8 +30,8 @@ CREATE TABLE  task
     done         boolean,
 );
 
-DROP TABLE IF EXISTS  module_has_task;
-CREATE TABLE  module_has_task
+DROP TABLE IF EXISTS module_has_task;
+CREATE TABLE module_has_task
 (
     module       text,
     task_id      bigint,

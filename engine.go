@@ -10,7 +10,6 @@ import (
 	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
 	"github.com/scyna/engine/manager/generator"
-	"github.com/scyna/engine/manager/logging"
 	"github.com/scyna/engine/manager/scheduler"
 	"github.com/scyna/engine/manager/session"
 	"github.com/scyna/engine/manager/setting"
@@ -66,11 +65,10 @@ func main() {
 	scyna.RegisterEndpoint(scyna_const.GEN_GET_SN_URL, generator.GetSN)
 
 	/*logging*/
-	scyna.RegisterSignal(scyna_const.LOG_CREATED_CHANNEL, logging.Write)
+	scyna.RegisterSignal(scyna_const.LOG_CREATED_CHANNEL, trace.WriteLog)
 
 	/*trace*/
 	scyna.RegisterSignal(scyna_const.TRACE_CREATED_CHANNEL, trace.TraceCreated)
-	scyna.RegisterSignal(scyna_const.TAG_CREATED_CHANNEL, trace.TagCreated)
 	scyna.RegisterSignal(scyna_const.ENDPOINT_DONE_CHANNEL, trace.ServiceDone)
 
 	/*setting*/
