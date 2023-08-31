@@ -21,6 +21,7 @@ type trace struct {
 	Path      string
 	SessionID uint64
 	Status    uint32
+	Source    string
 }
 
 type Gateway struct {
@@ -76,6 +77,7 @@ func (proxy *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		Path:      url,
 		Type:      scyna.TRACE_ENDPOINT,
 		SessionID: scyna.Session.ID(),
+		Source:    scyna.Module(),
 	}
 	defer saveTrace(&trace)
 

@@ -16,9 +16,9 @@ func TraceCreatedHandler(signal *scyna_proto.TraceCreatedSignal) {
 	day := scyna_utils.GetDayByTime(time.Now())
 
 	if err := scyna.DB.Execute("INSERT INTO "+scyna_const.TRACE_TABLE+
-		"(type, path, day, id, time, duration, session, status)"+" VALUES (?,?,?,?,?,?,?,?)",
+		"(type, path, day, id, time, duration, session, status, source)"+" VALUES (?,?,?,?,?,?,?,?,?)",
 		signal.Type, signal.Path, day, signal.ID, time.UnixMicro(int64(signal.Time)),
-		signal.Duration, signal.SessionID, signal.Status); err != nil {
+		signal.Duration, signal.SessionID, signal.Status, signal.Source); err != nil {
 		log.Print("Can not save trace created " + strconv.FormatUint(signal.ID, 10) + " / " + err.Error())
 	}
 }

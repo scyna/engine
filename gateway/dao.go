@@ -13,8 +13,8 @@ func saveTrace(trace *trace) {
 	trace.Duration = uint64(time.Now().UnixNano() - trace.Time.UnixNano())
 
 	if err := scyna.DB.Execute("INSERT INTO "+scyna_const.TRACE_TABLE+
-		"(type, path, day, id, time, duration, session, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
-		trace.Type, trace.Path, day, trace.ID, trace.Time, trace.Duration, trace.SessionID, trace.Status); err != nil {
+		"(type, path, day, id, time, duration, session, status, source) VALUES (?,?,?,?,?,?,?,?,?)",
+		trace.Type, trace.Path, day, trace.ID, trace.Time, trace.Duration, trace.SessionID, trace.Status, trace.Source); err != nil {
 		scyna.Session.Error("Can not save trace - " + err.Error())
 	}
 }

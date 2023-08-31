@@ -12,6 +12,7 @@ CREATE TABLE trace
     duration    bigint,
     parent      bigint,
     status      int,
+    source      text,
     PRIMARY KEY ((path,day), time, id)
 ) WITH CLUSTERING ORDER BY (time DESC);
 CREATE INDEX ON  trace(id);
