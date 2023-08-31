@@ -17,7 +17,7 @@ func ListSettingHandler(ctx *scyna.Endpoint, request *PROTO.ListSettingRequest) 
 		return scyna.REQUEST_INVALID
 	}
 
-	rs := scyna.DB.QueryMany("SELECT key,value FROM "+scyna_const.SETTING_TABLE+" WHERE module_code = ?", request.Module)
+	rs := scyna.DB.QueryMany("SELECT key,value FROM "+scyna_const.SETTING_TABLE+" WHERE module = ?", request.Module)
 	response := &PROTO.ListSettingResponse{}
 	for rs.Next() {
 		var key string

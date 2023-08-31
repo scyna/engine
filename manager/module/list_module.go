@@ -17,7 +17,7 @@ func ListModuleHandler(ctx *scyna.Endpoint, request *PROTO.ListModuleRequest) sc
 		var code string
 		if err := rs.Scan(&code); err != nil {
 			ctx.Error(err.Error())
-			return scyna.REQUEST_INVALID
+			return scyna.SERVER_ERROR
 		}
 
 		response.Items = append(response.Items, code)
