@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package scyna;
+option  go_package = "./;PROTO";
+option  optimize_for = CODE_SIZE;
+
+message ListModuleRequest 
+{
+}
+
+message ListModuleResponse 
+{
+  repeated string Items = 1;
+}
