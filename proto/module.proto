@@ -1,5 +1,5 @@
 syntax = "proto3";
-
+import "google/protobuf/timestamp.proto";
 package scyna;
 option  go_package = "./;PROTO";
 option  optimize_for = CODE_SIZE;
@@ -11,4 +11,44 @@ message ListModuleRequest
 message ListModuleResponse 
 {
   repeated string Items = 1;
+}
+
+message ListSessionRequest 
+{
+  string Module = 1;
+}
+
+message SessionItem
+{
+  int64 id = 1;
+  google.protobuf.Timestamp Started = 2;
+  google.protobuf.Timestamp Updated = 3;
+}
+
+message ListSessionResponse
+{
+  repeated SessionItem Items = 1;
+}
+
+message ListSettingRequest 
+{
+  string Module = 1;
+}
+
+message SettingItem
+{
+  string Key = 1;
+  string Value = 2;
+}
+
+message ListSettingResponse
+{
+  repeated SettingItem Items = 1;
+}
+
+message UpdateSettingRequest 
+{
+  string Module = 1;
+  string Key = 2;
+  string Value = 3;
 }
