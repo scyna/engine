@@ -13,8 +13,8 @@ func TestWriteSetting(t *testing.T) {
 		Secret:     "123456",
 	})
 	scyna.UseRemoteLog(3)
-	scyna.Settings.Write("test", "test")
-	if ok, val := scyna.Settings.ReadString("test"); !ok || val != "test" {
+	scyna.Settings.Write("test", "test1")
+	if ok, val := scyna.Settings.ReadString("test"); !ok || val != "test1" {
 		t.Fatal("Can not write setting")
 	}
 }

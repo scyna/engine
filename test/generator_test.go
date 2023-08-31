@@ -1,7 +1,6 @@
 package test
 
 import (
-	"log"
 	"testing"
 
 	scyna "github.com/scyna/core"
@@ -14,9 +13,12 @@ func TestGenerateID(t *testing.T) {
 		Secret:     "123456",
 	})
 	scyna.UseRemoteLog(3)
-	log.Print(scyna.ID.Next())
+	if scyna.ID.Next() == 0 {
+		t.Fatal("Can not generate id")
+	}
 
 	sn := scyna.InitSerialNumber("test_sn")
-
-	log.Print(sn.Next())
+	if len(sn.Next()) == 0 {
+		t.Fatal("Can not generate serial number")
+	}
 }
