@@ -12,6 +12,17 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+type trace struct {
+	ParentID  uint64
+	ID        uint64
+	Type      scyna.TraceType
+	Time      time.Time
+	Duration  uint64
+	Path      string
+	SessionID uint64
+	Status    uint32
+}
+
 type Gateway struct {
 	Contexts        scyna_utils.HttpContextPool
 	PublicEndpoints []string
@@ -58,7 +69,7 @@ func (proxy *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	rw.Header().Set("Access-Control-Allow-Methods", "POST")
 	rw.Header().Set("Content-Type", req.Header.Get("Content-Type"))
 
-	trace := scyna.Trace{
+	trace := trace{
 		ID:        callID,
 		ParentID:  0,
 		Time:      time.Now(),
@@ -66,7 +77,7 @@ func (proxy *Gateway) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		Type:      scyna.TRACE_ENDPOINT,
 		SessionID: scyna.Session.ID(),
 	}
-	defer saveTrace(trace)
+	defer saveTrace(&trace)
 
 	ctx := proxy.Contexts.GetContext()
 	defer proxy.Contexts.PutContext(ctx)
