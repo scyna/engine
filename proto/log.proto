@@ -1,0 +1,45 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+package scyna;
+option  go_package = "./;PROTO";
+option  optimize_for = CODE_SIZE;
+
+message ListLogRequest 
+{
+  google.protobuf.Timestamp Position = 1;
+  uint32 Count = 2;
+}
+
+message LogItem
+{
+  google.protobuf.Timestamp Time = 1;
+  string Source = 2;
+  string Message = 3;
+  string Level = 4;
+}
+
+message ListLogResponse 
+{
+  repeated LogItem Items = 1;
+}
+
+message ListEndpointTraceRequest 
+{
+  google.protobuf.Timestamp Position = 1;
+  uint32 Count = 2;
+}
+
+message EndpointTraceItem
+{
+  google.protobuf.Timestamp Time = 1;
+  string ID = 2;
+  string Request = 3;
+  string Response = 4;
+  uint32 Status = 5;
+  uint64 SessionID = 6;
+}
+
+message ListEnpointTraceResponse 
+{
+  repeated EndpointTraceItem Items = 1;
+}
