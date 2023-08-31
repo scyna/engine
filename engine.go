@@ -10,11 +10,11 @@ import (
 	scyna_const "github.com/scyna/core/const"
 	scyna_proto "github.com/scyna/core/proto/generated"
 	"github.com/scyna/engine/features/generator"
+	"github.com/scyna/engine/features/proxy"
 	"github.com/scyna/engine/features/scheduler"
 	"github.com/scyna/engine/features/session"
 	"github.com/scyna/engine/features/setting"
 	"github.com/scyna/engine/features/trace"
-	"github.com/scyna/engine/proxy"
 )
 
 const MODULE_CODE = "scyna_engine"
