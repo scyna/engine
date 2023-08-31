@@ -3,6 +3,7 @@ package test
 import (
 	"bytes"
 	"io"
+	"log"
 	"net/http"
 	"testing"
 
@@ -47,4 +48,10 @@ func TestCreateSession(t *testing.T) {
 	if err := proto.Unmarshal(resBody, &response); err != nil {
 		t.Fatal("Authenticate error")
 	}
+
+	log.Println(response.SessionID)
+	scyna.Session = scyna.NewSession(response.SessionID)
+	scyna.DirectInit("scyna_test", response.Config)
+
+	scyna.DB.AssureExists("SELECT id FROM "+scyna_const.SESSION_TABLE+" WHERE id = ?", response.SessionID)
 }
