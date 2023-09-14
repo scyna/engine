@@ -2,14 +2,14 @@ module github.com/scyna/engine
 
 go 1.20
 
-replace github.com/scyna/core => ../core
+//replace github.com/scyna/core => ../core
 
 require (
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/gocql/gocql v1.0.0
 	github.com/golang/protobuf v1.5.0
 	github.com/nats-io/nats.go v1.23.0
-	github.com/scyna/core v0.0.0-00010101000000-000000000000
+	github.com/scyna/core v1.2.11
 	google.golang.org/protobuf v1.28.0
 )
 
