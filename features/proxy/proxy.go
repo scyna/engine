@@ -8,6 +8,7 @@ import (
 	"time"
 
 	scyna "github.com/scyna/core"
+	scyna_const "github.com/scyna/core/const"
 	scyna_utils "github.com/scyna/core/utils"
 	"google.golang.org/protobuf/proto"
 )
@@ -75,19 +76,13 @@ func (proxy *Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 	if !ok || clientSecret != client.Secret {
 		http.Error(rw, "Unauthorized", http.StatusUnauthorized)
-		scyna.Session.Info("Wrong client id or secret: " + clientID + ", secret:" + clientSecret)
+		scyna.Session.Info("Wrong client id or secret: " + clientID + ", secret: " + clientSecret)
 		trace.Status = http.StatusUnauthorized
 		return
 	}
 
-	if err := scyna.DB.QueryOne("SELECT url FROM client_use_endpoint WHERE client=? AND url=?", clientID, url).Scan(&url); err != nil {
-		// if err := qb.Select(scyna_const.CLIENT_USE_ENDPOINT_TABLE).
-		// 	Columns("url").
-		// 	Where(qb.Eq("client"), qb.Eq("url")).
-		// 	Limit(1).
-		// 	Query(scyna.DB).
-		// 	Bind(clientID, url).
-		// 	GetRelease(&url); err != nil {
+	if err := scyna.DB.QueryOne("SELECT url FROM "+scyna_const.CLIENT_USE_ENDPOINT_TABLE+" WHERE client=? AND url=?", 
+			clientID, url).Scan(&url); err != nil {
 		http.Error(rw, "Unauthorized", http.StatusUnauthorized)
 		scyna.Session.Info(fmt.Sprintf("Wrong url: %s, error = %s\n", url, err.Error()))
 		trace.Status = http.StatusUnauthorized

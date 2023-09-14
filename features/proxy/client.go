@@ -2,6 +2,8 @@ package proxy
 
 import (
 	"fmt"
+	"log"
+	"strconv"
 
 	"github.com/nats-io/nats.go"
 	scyna "github.com/scyna/core"
@@ -27,7 +29,7 @@ func (proxy *Proxy) initClients() {
 func (proxy *Proxy) loadClients() map[string]Client {
 	ret := make(map[string]Client)
 
-	scanner := scyna.DB.QueryMany("SELECT id, secret FROM client")
+	scanner := scyna.DB.QueryMany("SELECT id, secret FROM " + scyna_const.CLIENT_TABLE)
 	for scanner.Next() {
 		var client Client
 		if err := scanner.Scan(&client.ID, &client.Secret); err != nil {
@@ -35,6 +37,6 @@ func (proxy *Proxy) loadClients() map[string]Client {
 		}
 		ret[client.ID] = client
 	}
-
+	log.Println("Load Clients: " + strconv.Itoa(len(ret)))
 	return ret
 }
