@@ -97,7 +97,7 @@ func main() {
 
 		if *certificateEnable && *certificateFile != "" {
 			if err := http.ListenAndServeTLS(":"+*proxyPort, *certificateFile, *certificateKey, proxy_); err != nil {
-				log.Println("Proxy: " + err.Error())
+				log.Println("Proxy(s): " + err.Error())
 			}
 		} else {
 			if err := http.ListenAndServe(":"+*proxyPort, proxy_); err != nil {
@@ -115,10 +115,12 @@ func main() {
 	log.Println("Scyna Manager Start with port " + *managerPort)
 	if *certificateEnable && *certificateFile != "" {
 		if err := http.ListenAndServeTLS(":"+*managerPort, *certificateFile, *certificateKey, nil); err != nil {
+			log.Println("Manager(s): " + err.Error())
 			panic(err)
 		}
 	} else {
 		if err := http.ListenAndServe(":"+*managerPort, nil); err != nil {
+			log.Println("Manager: " + err.Error())
 			panic(err)
 		}
 	}

@@ -1,6 +1,6 @@
 module github.com/scyna/engine
 
-go 1.20
+go 1.19
 
 //replace github.com/scyna/core => ../core
 

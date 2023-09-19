@@ -13,7 +13,6 @@ COPY --from=build-env /workspace/engine/application /application
 COPY --from=build-env /workspace/engine/.cert/ ./cert/
 ENV MANAGER_PORT=6081 \
     PROXY_PORT=6060 \
-    GATEWAY_PORT=6443 \
     NATS_URL=localhost \
     NATS_USERNAME="" \
     NATS_PASSWORD="" \
@@ -26,11 +25,10 @@ ENV MANAGER_PORT=6081 \
     CERTIFICATE_KEY="/cert/localhost.key" \
     CERTIFICATE_ENABLE=false
 
-EXPOSE $MANAGER_PORT $PROXY_PORT $GATEWAY_PORT
+EXPOSE $MANAGER_PORT $PROXY_PORT
 CMD /application \
     --manager_port=${MANAGER_PORT} \
     --proxy_port=${PROXY_PORT} \
-    --gateway_port=${GATEWAY_PORT} \
     --nats_url=${NATS_URL} \
     --nats_username=${NATS_USERNAME} \
     --nats_password=${NATS_PASSWORD} \
